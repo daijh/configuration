@@ -1,0 +1,15 @@
+[color]
+	ui = auto
+[core]
+	editor = vim
+	excludesfile = ~/.gitignore
+[alias]
+	st = status
+	br = branch
+	ci = commit
+	co = checkout
+	df = diff
+[merge]
+	tool = vimdiff
+[mergetool]
+	prompt = false
