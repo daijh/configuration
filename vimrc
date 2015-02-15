@@ -1,5 +1,5 @@
 " common
-:syntax on
+syntax on
 filetype plugin on
 let mapleader = ","
 set ignorecase
@@ -9,6 +9,7 @@ set nonumber
 
 set smarttab
 set tabstop=4
+set softtabstop=4
 set shiftwidth=4
 " set expandtab
 " set autoindent
