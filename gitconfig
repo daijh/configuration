@@ -6,10 +6,12 @@
 [alias]
 	st = status
 	br = branch
-	ci = commit
+	ci = commit -s
 	co = checkout
 	df = diff
 [merge]
+	tool = vimdiff
+[diff]
 	tool = vimdiff
 [mergetool]
 	prompt = false
