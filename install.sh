@@ -3,8 +3,8 @@ ln -s -v ~/configuration/vimrc ~/.vimrc
 ln -s -v ~/configuration/tmux.conf ~/.tmux.conf
 echo -e "[include]\n\tpath = ~/configuration/gitconfig" >> ~/.gitconfig
 
-#git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
-#vim +PluginInstall +qall
+git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
+vim +PluginInstall +qall
 
 
 #alias vimtags='(echo "!_TAG_FILE_SORTED    2   /2=foldcase/"; \
