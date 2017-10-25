@@ -6,7 +6,7 @@
 [alias]
 	st = status
 	br = branch
-	ci = commit -s
+	ci = commit
 	co = checkout
 	df = diff
 [merge]
