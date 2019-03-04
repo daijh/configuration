@@ -53,15 +53,13 @@ def PrintUsage():
     print "\t" + 'clean'
     print "\t-u",
     print "\t" + 'update'
-    print "\t-a",
-    print "\t" + 'generate tags w/ my android configuration'
 
     sys.exit(1)
 
 if __name__ == '__main__':
 
     try:
-        options, arguments = getopt.getopt(sys.argv[1:], 'ca', [])
+        options, arguments = getopt.getopt(sys.argv[1:], 'cu', [])
     except getopt.GetoptError, error:
         PrintUsage()
 
@@ -82,16 +80,6 @@ if __name__ == '__main__':
             optClean = True
         elif option == "-u":
             optUpdate = True
-        elif option == "-a":
-            optPaths = [
-                "frameworks",
-                "system/core/",
-                "hardware/libhardware",
-                "external/libva",
-                "external/drm",
-                "vendor/intel/PRIVATE/rtc/webrtc/",
-                "vendor/intel/apps/webrtccssdk"
-            ]
         else:
             print 'invalid option: ', option
             PrintUsage()
