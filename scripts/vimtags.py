@@ -1,7 +1,7 @@
 #! /usr/bin/python
 
 # @author	jianhui.j.dai@intel.com
-# @brief	build ufo for android
+# @brief
 # @version	0.1
 # @date		2014/07/03
 
