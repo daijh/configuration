@@ -16,6 +16,11 @@ set expandtab
 " set ai!
 " common end
 
+" diff
+if &diff
+    colorscheme blue
+endif
+
 " vundle
 set nocompatible
 filetype off
