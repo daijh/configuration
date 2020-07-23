@@ -8,8 +8,28 @@ set nonumber
 " set number
 
 
+" linux kernel
+"set tabstop=8
+"set softtabstop=8
+"set shiftwidth=8
+
+" non linux kernel
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
+
+" google
+set tabstop=2
+set softtabstop=2
+set shiftwidth=2
+
+
+set expandtab
+" set noexpandtab
+" set smarttab
 " set autoindent
 " set ai!
+
 " common end
 
 
@@ -150,3 +170,5 @@ Bundle 'FuzzyFinder'
 
 Bundle 'genutils'
 Bundle 'lookupfile'
+
+Bundle "pangloss/vim-javascript"
