@@ -35,12 +35,12 @@ def gt_freq():
         cur_freq=file.readline().strip()
         file.close()
 
-        print "gpu max freq: ", max_freq
-        print "gpu min freq: ", min_freq
-        print "gpu cur freq: ", cur_freq
-        print "gpu act freq: ", act_freq
+        print("gpu max freq: ", max_freq)
+        print("gpu min freq: ", min_freq)
+        print("gpu cur freq: ", cur_freq)
+        print("gpu act freq: ", act_freq)
     except Exception as e:
-        print e
+        print('No GPU!')
 
 def ia_freq():
     '''
@@ -56,7 +56,7 @@ def ia_freq():
     cpus_file=open(cpu_dir + cpus_filename, 'r')
     line = cpus_file.readline().strip()
     cpus_file.close()
-    print "cpu: ", line
+    print("cpu: ", line)
     cpus = int(re.sub(r'0-([0-9]*)', r'\1', line))
 
     maxfreq_file = open(cpu_dir + 'cpu0/cpufreq/' + maxfreq_filename, 'r')
@@ -66,7 +66,7 @@ def ia_freq():
     minfreq_file = open(cpu_dir + 'cpu0/cpufreq/' + minfreq_filename, 'r')
     minfreq=minfreq_file.readline().strip()
     minfreq_file.close()
-    print ('min freq: {0},\tmax freq: {1}'.format(minfreq, maxfreq))
+    print('min freq: {0},\tmax freq: {1}'.format(minfreq, maxfreq))
 
     for cpu in range(cpus + 1):
         filename = cpu_dir + 'cpu' + str(cpu) + '/cpufreq/' + curfreq_filename
@@ -74,30 +74,30 @@ def ia_freq():
         cur_freq = file.readline().strip()
         file.close()
 
-        print('cpu{0:<3}:{1:>10}'.format(cpu, cur_freq)),
+        print("cpu%3d:%10s" % (cpu, cur_freq), end = '')
 
-        if cpus <= 8:
+        if cpus <= 4:
             print('')
         else:
             if cpu == cpus:
                 print('')
-            elif (cpu+1) % 8 != 0:
-                print(',\t'),
+            elif (cpu+1) % 4 != 0:
+                print(',\t', end = ''),
             else:
                 print('')
 
 def PrintUsage():
-    print "Usage: " + sys.argv[0] + " [] "
+    print("Usage: " + sys.argv[0] + " [] ")
 
     sys.exit(1)
 
 if __name__ == '__main__':
 
     while True:
-        print '*#' * 10
+        print('*#' * 10)
         ia_freq()
-        print '--' * 10
+        print('--' * 10)
         gt_freq()
-        print '*#' * 10
+        print('*#' * 10)
         time.sleep(1)
 
