@@ -7,12 +7,13 @@ set incsearch
 set nonumber
 " set number
 
+set tabstop=4 softtabstop=4 shiftwidth=4
+set expandtab
+
 " c, cpp
 autocmd FileType c,cpp setlocal tw=80
 autocmd FileType c,cpp setlocal expandtab
 
-" normal style
-"autocmd FileType c,cpp setlocal tabstop=4 softtabstop=4 shiftwidth=4
 " google
 autocmd FileType c,cpp setlocal tabstop=2 softtabstop=2 shiftwidth=2
 " linux kernel
