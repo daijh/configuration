@@ -7,38 +7,22 @@ set incsearch
 set nonumber
 " set number
 
+" c, cpp
+autocmd FileType c,cpp setlocal tw=80
+autocmd FileType c,cpp setlocal expandtab
 
-" linux kernel
-"set tabstop=8
-"set softtabstop=8
-"set shiftwidth=8
-
-" non linux kernel
-set tabstop=4
-set softtabstop=4
-set shiftwidth=4
-
+" normal style
+"autocmd FileType c,cpp setlocal tabstop=4 softtabstop=4 shiftwidth=4
 " google
-set tabstop=2
-set softtabstop=2
-set shiftwidth=2
+autocmd FileType c,cpp setlocal tabstop=2 softtabstop=2 shiftwidth=2
+" linux kernel
+"autocmd FileType c,cpp setlocal tabstop=8 softtabstop=8 shiftwidth=8
 
-
-set expandtab
-" set noexpandtab
-" set smarttab
-" set autoindent
-" set ai!
+" gitcommit
+autocmd FileType gitcommit setlocal tw=72 cc=+1 spell
 
 " common end
 
-
-set smarttab
-set tabstop=4
-" indentation rules for FFmpeg: 4 spaces, no tabs
-set expandtab
-set shiftwidth=4
-set softtabstop=4
 set cindent
 set cinoptions=(0
 " " Allow tabs in Makefiles.
