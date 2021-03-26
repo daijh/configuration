@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#! /usr/bin/python3
 
 # @author	jianhui.j.dai@intel.com
 # @brief
