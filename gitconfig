@@ -17,3 +17,6 @@
 	prompt = false
 [credential]
 	helper = cache
+[user]
+	name = Jianhui Dai
+	email = jianhui.j.dai@intel.com
