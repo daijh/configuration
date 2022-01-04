@@ -9,7 +9,7 @@ ROOT=`dirname ${THIS}`
 source /etc/os-release
 if [ $NAME = "Ubuntu" ]; then
     sudo -E apt install -y git exuberant-ctags tmux tree ack-grep vim ssh \
-samba build-essential automake global cmake
+samba build-essential automake global cmake lm-sensors
 else
     sudo -E yum install -y git exuberant-ctags tmux tree ack-grep vim ssh samba \
 build-essential automake
