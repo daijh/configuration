@@ -10,7 +10,7 @@ source /etc/os-release
 if [ $NAME = "Ubuntu" ]; then
     sudo -E apt install -y git exuberant-ctags tmux tree ack-grep vim ssh \
 samba build-essential automake global cmake
-    sudo -E apt install -y lm-sensors cpuid cpuinfo
+    sudo -E apt install -y lm-sensors cpuid cpuinfo hwloc
     sudo -E apt install -y ascii aview imagemagick
     sudo -E apt install -y cmatrix figlet hollywood
     sudo -E apt install -y fortunes fortunes-zh cowsay lolcat
