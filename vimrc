@@ -1,4 +1,6 @@
 " common
+colorscheme delek
+
 syntax on
 filetype plugin on
 let mapleader = ","
