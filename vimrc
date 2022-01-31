@@ -1,4 +1,5 @@
-" common
+
+" ===Common Setting===
 colorscheme delek
 
 syntax on
@@ -9,9 +10,14 @@ set incsearch
 set nonumber
 " set number
 
+" normal file type
 set tabstop=4 softtabstop=4 shiftwidth=4
 set expandtab
 
+" ===Common Setting End===
+
+
+" ===FileType===
 " c, cpp
 autocmd FileType c,cpp setlocal tw=80
 autocmd FileType c,cpp setlocal expandtab
@@ -24,22 +30,20 @@ autocmd FileType c,cpp setlocal tabstop=2 softtabstop=2 shiftwidth=2
 " gitcommit
 autocmd FileType gitcommit setlocal tw=72 cc=+1 spell
 
-" common end
-
-set cindent
-set cinoptions=(0
-" " Allow tabs in Makefiles.
+" Allow tabs in Makefiles.
 autocmd FileType make,automake set noexpandtab shiftwidth=8 softtabstop=8
+" ===FileType End===
+
+
 " Trailing whitespace and tabs are forbidden, so highlight them.
 highlight ForbiddenWhitespace ctermbg=red guibg=red
 match ForbiddenWhitespace /\s\+$\|\t/
 " Do not highlight spaces at the end of line while typing on that line.
 autocmd InsertEnter * match ForbiddenWhitespace /\t\|\s\+\%#\@<!$/
 
-
 " diff
 if &diff
-    colorscheme blue
+"   colorscheme blue
 endif
 
 " vundle
@@ -80,6 +84,12 @@ let Tlist_Exit_OnlyWindow=1
 nmap tl :TlistToggle
 " taglist end
 
+
+" tagbar
+nmap to :TagbarToggle
+let g:tagbar_left=1
+" tagbar end
+
 " grep
 nnoremap <silent> <F6> :Grep<CR>
 nnoremap <silent> <F7> :Bgrep<CR>
@@ -115,7 +125,7 @@ nnoremap <leader>b :FufFile<CR>
 " lookupfile
 let db = findfile("filenametags", ".;")
 if (!empty(db))
-  let g:LookupFile_TagExpr = string(db)
+    let g:LookupFile_TagExpr = string(db)
 endif
 
 let g:LookupFile_ignorecase = 1
@@ -124,32 +134,54 @@ let g:LookupFile_AlwaysAcceptFirst = 1
 let g:LookupFile_MinPatLength = 2
 
 function! LookupFile_IgnoreCaseFunc(pattern)
-        let _tags = &tags
-        try
-                let &tags = eval(g:LookupFile_TagExpr)
-                let newpattern = '\c' . a:pattern
-                let tags = taglist(newpattern)
-        catch
-                echohl ErrorMsg | echo "Exception: " . v:exception | echohl NONE
-                return ""
-        finally
-                let &tags = _tags
-        endtry
+    let _tags = &tags
+    try
+        let &tags = eval(g:LookupFile_TagExpr)
+        let newpattern = '\c' . a:pattern
+        let tags = taglist(newpattern)
+    catch
+        echohl ErrorMsg | echo "Exception: " . v:exception | echohl NONE
+        return ""
+    finally
+        let &tags = _tags
+    endtry
 
-        " Show the matches for what is typed so far.
-        let files = map(tags, 'v:val["filename"]')
-        return files
+    " Show the matches for what is typed so far.
+    let files = map(tags, 'v:val["filename"]')
+    return files
 endfunction
 let g:LookupFile_LookupFunc = 'LookupFile_IgnoreCaseFunc'
 " lookupfile end
 
+
 " The rest of your config follows here
+
+" file explorer
 Bundle 'scrooloose/nerdtree'
-Bundle 'taglist.vim'
-Bundle 'grep.vim'
+
+" windows manager
 Bundle 'minibufexpl.vim'
+
+" code tags
+Bundle 'majutsushi/tagbar'
+
+" find files
+Bundle 'kien/ctrlp.vim'
+
+" easy motion
+Bundle 'Lokaltog/vim-easymotion'
+
+" mark words
 Bundle 'Mark'
 
+" status/tabline
+Plugin 'vim-airline/vim-airline'
+
+" markdown preview (TODO)
+
+" Obsolete
+Bundle 'grep.vim'
+Bundle 'taglist.vim'
 Bundle 'gtags.vim'
 
 Bundle 'L9'
@@ -158,4 +190,3 @@ Bundle 'FuzzyFinder'
 Bundle 'genutils'
 Bundle 'lookupfile'
 
-Bundle "pangloss/vim-javascript"
