@@ -14,9 +14,6 @@ samba build-essential automake global cmake
     sudo -E apt install -y ascii aview imagemagick
     sudo -E apt install -y cmatrix figlet hollywood
     sudo -E apt install -y fortunes fortunes-zh cowsay lolcat
-else
-    sudo -E yum install -y git exuberant-ctags tmux tree ack-grep vim ssh samba \
-build-essential automake
 fi
 
 # vim

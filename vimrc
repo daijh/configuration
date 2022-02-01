@@ -8,7 +8,13 @@ let mapleader = ","
 set ignorecase
 set incsearch
 set nonumber
-" set number
+set nocompatible " not compatible w/ vi
+
+" ===foldenable===
+"set foldenable
+"set foldmethod=syntax
+"set foldmethod=manual
+" ===foldenable end===
 
 " normal file type
 set tabstop=4 softtabstop=4 shiftwidth=4
@@ -16,9 +22,8 @@ set expandtab
 
 " ===Common Setting End===
 
-
 " ===FileType===
-" c, cpp
+autocmd FileType c,cpp : set foldmethod=syntax
 autocmd FileType c,cpp setlocal tw=80
 autocmd FileType c,cpp setlocal expandtab
 
@@ -34,20 +39,7 @@ autocmd FileType gitcommit setlocal tw=72 cc=+1 spell
 autocmd FileType make,automake set noexpandtab shiftwidth=8 softtabstop=8
 " ===FileType End===
 
-
-" Trailing whitespace and tabs are forbidden, so highlight them.
-highlight ForbiddenWhitespace ctermbg=red guibg=red
-match ForbiddenWhitespace /\s\+$\|\t/
-" Do not highlight spaces at the end of line while typing on that line.
-autocmd InsertEnter * match ForbiddenWhitespace /\t\|\s\+\%#\@<!$/
-
-" diff
-if &diff
-"   colorscheme blue
-endif
-
 " vundle
-set nocompatible
 filetype off
 
 set rtp+=~/.vim/bundle/vundle/
@@ -78,15 +70,8 @@ let NERDTreeWinSize=31
 nmap <leader>f :NERDTreeToggle
 " NERD Tree end
 
-" taglist
-let Tlist_Show_One_File=1
-let Tlist_Exit_OnlyWindow=1
-nmap tl :TlistToggle
-" taglist end
-
-
 " tagbar
-nmap to :TagbarToggle
+nmap tl :TagbarToggle
 let g:tagbar_left=1
 " tagbar end
 
@@ -105,88 +90,45 @@ let g:miniBufExplMapCTabSwitchBufs = 1
 let g:miniBufExplModSelTarget = 1
 " miniBufExpl end
 
-" gtags
-map <C-n> :cn<CR>
-map <C-p> :cp<CR>
-map <C-\> :GtagsCursor<CR>
-" gtags end
-
 " vimdiff
 map <silent> <leader>2 :diffget 2<CR> :diffupdate<CR>
 map <silent> <leader>3 :diffget 3<CR> :diffupdate<CR>
 map <silent> <leader>4 :diffget 4<CR> :diffupdate<CR>
-" vimdiff end
-
-" FuzzyFinder
-nnoremap <leader>b :FufFile<CR>
-" nnoremap <leader>bb :FufBuffer<CR>
-" FuzzyFinder end
-
-" lookupfile
-let db = findfile("filenametags", ".;")
-if (!empty(db))
-    let g:LookupFile_TagExpr = string(db)
+" diff
+if &diff
+    colorscheme delek
 endif
-
-let g:LookupFile_ignorecase = 1
-let g:LookupFile_smartcase = 1
-let g:LookupFile_AlwaysAcceptFirst = 1
-let g:LookupFile_MinPatLength = 2
-
-function! LookupFile_IgnoreCaseFunc(pattern)
-    let _tags = &tags
-    try
-        let &tags = eval(g:LookupFile_TagExpr)
-        let newpattern = '\c' . a:pattern
-        let tags = taglist(newpattern)
-    catch
-        echohl ErrorMsg | echo "Exception: " . v:exception | echohl NONE
-        return ""
-    finally
-        let &tags = _tags
-    endtry
-
-    " Show the matches for what is typed so far.
-    let files = map(tags, 'v:val["filename"]')
-    return files
-endfunction
-let g:LookupFile_LookupFunc = 'LookupFile_IgnoreCaseFunc'
-" lookupfile end
-
+" vimdiff end
 
 " The rest of your config follows here
 
 " file explorer
-Bundle 'scrooloose/nerdtree'
+Plugin 'scrooloose/nerdtree'
 
 " windows manager
-Bundle 'minibufexpl.vim'
+Plugin 'minibufexpl.vim'
 
 " code tags
-Bundle 'majutsushi/tagbar'
+Plugin 'majutsushi/tagbar'
 
-" find files
-Bundle 'kien/ctrlp.vim'
+" find files (TODO)
+Plugin 'kien/ctrlp.vim'
 
 " easy motion
-Bundle 'Lokaltog/vim-easymotion'
+Plugin 'Lokaltog/vim-easymotion'
 
 " mark words
-Bundle 'Mark'
+Plugin 'Mark'
 
 " status/tabline
 Plugin 'vim-airline/vim-airline'
 
+" regular expression (TODO)
+Plugin 'grep.vim'
+" Plugin 'mileszs/ack.vim'
+
+" as name
+Plugin 'ShowTrailingWhitespace'
+
 " markdown preview (TODO)
-
-" Obsolete
-Bundle 'grep.vim'
-Bundle 'taglist.vim'
-Bundle 'gtags.vim'
-
-Bundle 'L9'
-Bundle 'FuzzyFinder'
-
-Bundle 'genutils'
-Bundle 'lookupfile'
 
