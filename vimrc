@@ -11,6 +11,7 @@ set nonumber
 set nocompatible " not compatible w/ vi
 
 " ===foldenable===
+"set nofoldenable
 "set foldenable
 "set foldmethod=syntax
 "set foldmethod=manual
@@ -24,6 +25,7 @@ set expandtab
 
 " ===FileType===
 autocmd FileType c,cpp : set foldmethod=syntax
+autocmd FileType c,cpp : set nofoldenable
 autocmd FileType c,cpp setlocal tw=80
 autocmd FileType c,cpp setlocal expandtab
 
@@ -94,9 +96,9 @@ let g:miniBufExplModSelTarget = 1
 map <silent> <leader>2 :diffget 2<CR> :diffupdate<CR>
 map <silent> <leader>3 :diffget 3<CR> :diffupdate<CR>
 map <silent> <leader>4 :diffget 4<CR> :diffupdate<CR>
-" diff
 if &diff
-    colorscheme delek
+    colorscheme evening
+    syntax off
 endif
 " vimdiff end
 
