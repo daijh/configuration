@@ -56,42 +56,6 @@ Bundle 'gmarik/vundle'
 filetype plugin indent on
 " vundle end
 
-" NERD Tree
-" let NERDChristmasTree=1
-" let NERDTreeAutoCenter=1
-" let NERDTreeBookmarksFile=$VIM.'\Data\NerdBookmarks.txt'
-let NERDTreeMouseMode=2
-let NERDTreeShowBookmarks=1
-let NERDTreeShowFiles=1
-let NERDTreeShowHidden=1
-let NERDTreeShowLineNumbers=1
-let NERDTreeWinPos='left'
-let NERDTreeWinSize=31
-" nnoremap f :NERDTreeToggle
-" nnoremap c :NERDTreeClose
-nmap <leader>f :NERDTreeToggle
-" NERD Tree end
-
-" tagbar
-nmap tl :TagbarToggle
-let g:tagbar_left=1
-" tagbar end
-
-" grep
-nnoremap <silent> <F6> :Grep<CR>
-nnoremap <silent> <F7> :Bgrep<CR>
-" grep end
-
-" miniBufExpl
-let g:miniBufExplorerMoreThanOne=1
-" let g:miniBufExplModSelTarget = 1
-" let g:miniBufExplForceSyntaxEnable = 1
-let g:miniBufExplMapWindowNavVim = 1
-let g:miniBufExplMapWindowNavArrows = 1
-let g:miniBufExplMapCTabSwitchBufs = 1
-let g:miniBufExplModSelTarget = 1
-" miniBufExpl end
-
 " vimdiff
 map <silent> <leader>2 :diffget 2<CR> :diffupdate<CR>
 map <silent> <leader>3 :diffget 3<CR> :diffupdate<CR>
@@ -107,16 +71,41 @@ endif
 " file explorer
 Plugin 'scrooloose/nerdtree'
 
+" let NERDChristmasTree=1
+" let NERDTreeAutoCenter=1
+" let NERDTreeBookmarksFile=$VIM.'\Data\NerdBookmarks.txt'
+let NERDTreeMouseMode=2
+let NERDTreeShowBookmarks=1
+let NERDTreeShowFiles=1
+let NERDTreeShowHidden=1
+let NERDTreeShowLineNumbers=1
+let NERDTreeWinPos='left'
+let NERDTreeWinSize=31
+" nnoremap f :NERDTreeToggle
+" nnoremap c :NERDTreeClose
+nmap <leader>f :NERDTreeToggle
+
 " windows manager
 Plugin 'minibufexpl.vim'
+
+let g:miniBufExplorerMoreThanOne=1
+" let g:miniBufExplModSelTarget = 1
+" let g:miniBufExplForceSyntaxEnable = 1
+let g:miniBufExplMapWindowNavVim = 1
+let g:miniBufExplMapWindowNavArrows = 1
+let g:miniBufExplMapCTabSwitchBufs = 1
+let g:miniBufExplModSelTarget = 1
 
 " code tags
 Plugin 'majutsushi/tagbar'
 
+nmap tl :TagbarToggle
+let g:tagbar_left=1
+
 " find files (TODO)
 Plugin 'kien/ctrlp.vim'
 
-" easy motion
+" easy motion (TODO)
 Plugin 'Lokaltog/vim-easymotion'
 
 " mark words
@@ -125,9 +114,16 @@ Plugin 'Mark'
 " status/tabline
 Plugin 'vim-airline/vim-airline'
 
-" regular expression (TODO)
-Plugin 'grep.vim'
-" Plugin 'mileszs/ack.vim'
+" grep
+" Plugin 'grep.vim'
+"
+" nnoremap <silent> <F6> :Grep<CR>
+" nnoremap <silent> <F7> :Bgrep<CR>
+
+" ack
+Plugin 'mileszs/ack.vim'
+
+nnoremap <silent> <F7> :Ack<CR>
 
 " as name
 Plugin 'ShowTrailingWhitespace'
