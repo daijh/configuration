@@ -9,6 +9,7 @@ set ignorecase
 set incsearch
 set nonumber
 set nocompatible " not compatible w/ vi
+set cursorline " highlight current line
 
 " ===foldenable===
 "set nofoldenable
@@ -127,6 +128,9 @@ nnoremap <silent> <F7> :Ack<CR>
 
 " as name
 Plugin 'ShowTrailingWhitespace'
+
+" mark
+Plugin 'kshenoy/vim-signature'
 
 " markdown preview (TODO)
 
