@@ -8,7 +8,7 @@ ROOT=`dirname ${THIS}`
 
 source /etc/os-release
 if [ $NAME = "Ubuntu" ]; then
-    sudo -E apt install -y git exuberant-ctags tmux tree ack-grep vim ssh \
+    sudo -E apt install -y git tig exuberant-ctags tmux tree ack-grep vim ssh \
 samba cifs-utils build-essential automake global cmake
     sudo -E apt install -y lm-sensors cpuid cpuinfo hwloc
     sudo -E apt install -y ascii aview imagemagick
