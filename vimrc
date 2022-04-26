@@ -134,3 +134,16 @@ Plugin 'kshenoy/vim-signature'
 
 " markdown preview (TODO)
 
+" Install vim-codefmt and its dependencies
+Plugin 'google/vim-maktaba'
+Plugin 'google/vim-glaive'
+Plugin 'google/vim-codefmt'
+Plugin 'https://gn.googlesource.com/gn', { 'rtp': 'misc/vim' }
+
+" Optional: configure vim-codefmt to autoformat upon saving the buffer.
+augroup CodeFmt
+    autocmd!
+    autocmd FileType gn AutoFormatBuffer gn
+    autocmd FileType c,cpp,proto,javascript,arduino AutoFormatBuffer clang-format
+    " Other file types...
+augroup END
