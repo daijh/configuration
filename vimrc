@@ -3,7 +3,7 @@
 colorscheme delek
 
 syntax on
-filetype plugin on
+filetype plugin indent on
 let mapleader = ","
 set ignorecase
 set incsearch
@@ -136,9 +136,16 @@ Plugin 'kshenoy/vim-signature'
 
 " Install vim-codefmt and its dependencies
 Plugin 'google/vim-maktaba'
-Plugin 'google/vim-glaive'
 Plugin 'google/vim-codefmt'
+" Also add Glaive, which is used to configure codefmt's maktaba flags. See
+" " `:help :Glaive` for usage.
+Plugin 'google/vim-glaive'
+" " ...
 Plugin 'https://gn.googlesource.com/gn', { 'rtp': 'misc/vim' }
+
+call vundle#end()
+" " the glaive#Install() should go after the "call vundle#end()"
+call glaive#Install()
 
 " Optional: configure vim-codefmt to autoformat upon saving the buffer.
 augroup CodeFmt
