@@ -145,7 +145,7 @@ Plugin 'https://gn.googlesource.com/gn', { 'rtp': 'misc/vim' }
 
 call vundle#end()
 " " the glaive#Install() should go after the "call vundle#end()"
-call glaive#Install()
+"call glaive#Install()
 
 " Optional: configure vim-codefmt to autoformat upon saving the buffer.
 augroup CodeFmt
