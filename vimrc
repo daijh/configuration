@@ -150,7 +150,7 @@ call vundle#end()
 " Optional: configure vim-codefmt to autoformat upon saving the buffer.
 augroup CodeFmt
     autocmd!
-    autocmd FileType gn AutoFormatBuffer gn
-    autocmd FileType c,cpp,proto,javascript,arduino AutoFormatBuffer clang-format
+    "autocmd FileType gn AutoFormatBuffer gn
+    "autocmd FileType c,cpp,proto,javascript,arduino AutoFormatBuffer clang-format
     " Other file types...
 augroup END
