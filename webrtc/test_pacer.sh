@@ -1,8 +1,8 @@
-#!/bin/bash
+#!/bin/bash -ex
 
 ALL_TESTS=false
 if [[ $2 == "-a" ]]; then
-  ALL_TESTS=true
+	ALL_TESTS=true
 fi
 
 PREFIX=./src/out/Default
@@ -21,9 +21,9 @@ ${PREFIX}/rtc_unittests |& tee ${LOG_DIR}/my-rtc_unittests.log &
 ${PREFIX}/rtc_media_unittests |& tee ${LOG_DIR}/my-rtc_media_unittests.log &
 
 if [ ${ALL_TESTS} == "true" ]; then
-  ${PREFIX}/webrtc_perf_tests |& tee ${LOG_DIR}/my-webrtc_perf_tests.log &
+	${PREFIX}/webrtc_perf_tests |& tee ${LOG_DIR}/my-webrtc_perf_tests.log &
 fi
 
 wait
 
-grep FAILED $LOG_DIR/*
+grep -E "PASSED|FAILED" $LOG_DIR/*
