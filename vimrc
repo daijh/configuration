@@ -25,21 +25,20 @@ set expandtab
 " ===Common Setting End===
 
 " ===FileType===
+
 autocmd FileType c,cpp : set foldmethod=syntax
 autocmd FileType c,cpp : set nofoldenable
 autocmd FileType c,cpp setlocal tw=80
 autocmd FileType c,cpp setlocal expandtab
 
 " google
-autocmd FileType c,cpp setlocal tabstop=2 softtabstop=2 shiftwidth=2
+"autocmd FileType c,cpp setlocal tabstop=2 softtabstop=2 shiftwidth=2
 " linux kernel
 "autocmd FileType c,cpp setlocal tabstop=8 softtabstop=8 shiftwidth=8
 
 " gitcommit
 autocmd FileType gitcommit setlocal tw=72 cc=+1 spell
 
-" Allow tabs in Makefiles.
-autocmd FileType make,automake set noexpandtab shiftwidth=8 softtabstop=8
 " ===FileType End===
 
 " vundle
