@@ -26,15 +26,12 @@ set expandtab
 
 " ===FileType===
 
+autocmd FileType sh setlocal tabstop=4 softtabstop=4 shiftwidth=4
+
 autocmd FileType c,cpp : set foldmethod=syntax
 autocmd FileType c,cpp : set nofoldenable
-autocmd FileType c,cpp setlocal tw=80
-autocmd FileType c,cpp setlocal expandtab
-
 " google
-"autocmd FileType c,cpp setlocal tabstop=2 softtabstop=2 shiftwidth=2
-" linux kernel
-"autocmd FileType c,cpp setlocal tabstop=8 softtabstop=8 shiftwidth=8
+autocmd FileType c,cpp setlocal tabstop=2 softtabstop=2 shiftwidth=2 tw=80 expandtab
 
 " gitcommit
 autocmd FileType gitcommit setlocal tw=72 cc=+1 spell
@@ -142,7 +139,7 @@ Plugin 'google/vim-glaive'
 " " ...
 Plugin 'https://gn.googlesource.com/gn', { 'rtp': 'misc/vim' }
 
-call vundle#end()
+"call vundle#end()
 " " the glaive#Install() should go after the "call vundle#end()"
 "call glaive#Install()
 

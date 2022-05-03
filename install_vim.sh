@@ -9,6 +9,6 @@ ROOT=`dirname ${THIS}`
 # vim
 echo -e "source ${ROOT}/vimrc" >> ~/.vimrc
 
-git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
+git clone git@github.com:gmarik/vundle.git ~/.vim/bundle/vundle
 vim +PluginInstall +qall
 
