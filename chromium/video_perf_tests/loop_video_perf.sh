@@ -8,8 +8,8 @@ loop=3
 dec_test_stream=data/1280x720-100frames-h264.h264
 enc_test_stream=data/1280x720-100frames-vp9.webm
 
-counter=1
-while [[ $counter -le loop ]]; do
+counter=0
+while [[ $counter -lt loop ]]; do
 	echo "Loop: $counter"
 	./run_video_perf.sh -d ${dec_test_stream}
 	./run_video_perf.sh -e ${enc_test_stream}
@@ -18,8 +18,8 @@ while [[ $counter -le loop ]]; do
 	((counter++))
 done
 
-counter=1
-while [[ $counter -le loop ]]; do
+counter=0
+while [[ $counter -lt loop ]]; do
 	echo "Loop: $counter"
 	./run_video_perf.sh -d ${dec_test_stream} --disable_vaapi_lock
 	./run_video_perf.sh -e ${enc_test_stream} --disable_vaapi_lock
