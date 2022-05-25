@@ -2,15 +2,24 @@
 
 PREFIX=./src/out/Default
 
-use_wayland=false
+use_wayland=true
 use_fake_capture=false
-use_system_media_driver=true
+use_system_media_driver=false
 debug=false
 
 y4m_file=/home/webrtc/Downloads/chromium_video/bbb_1280x720-100frames.y4m
 
-gdm_cmd=""
+gdb_cmd=""
 extra_options=""
+
+if [ ${use_system_media_driver} == "false" ]; then
+  #media_driver_prefix=~/third_party/media_samples/deps/out
+  media_driver_prefix=/opt/jdai12/dev/media_samples/deps/out
+  export LD_LIBRARY_PATH="${media_driver_prefix}/lib"
+  export LIBVA_DRIVERS_PATH="${media_driver_prefix}"
+fi
+
+vainfo
 
 if [ ${use_fake_capture} == "true" ]; then
   extra_options="${extra_options} \
@@ -22,35 +31,21 @@ fi
 if [ ${use_wayland} == "true" ]; then
   extra_options="${extra_options} \
 --ozone-platform=wayland"
-else
-  extra_options="${extra_options} \
---ozone-platform=x11"
 fi
 
 if [ ${debug} == "true" ]; then
-  gdm_cmd="gdb -args --single-process"
+  gdb_cmd="gdb -args"
   extra_options="${extra_options} \
---debug"
+--debug --single-process"
 fi
 
-if [ ${use_system_media_driver} == "true" ]; then
-  media_driver_prefix=~/third_party/media_samples/deps/out
-  export LD_LIBRARY_PATH="${media_driver_prefix}/lib"
-  export LIBVA_DRIVERS_PATH="${media_driver_prefix}"
-fi
-
-${gdm_cmd} \
+${gdb_cmd} \
   ${PREFIX}/chrome \
-  --enable-benchmarking \
-  --enable-experimental-web-platform-features \
-  --vmodule=*/ozone/*=1,*/wayland/*=1,*/vaapi/*=1,*/viz/*=1,*/media/gpu/*=1 \
-  --enable-logging=stderr --v=0 \
   --use-gl=egl \
-  --enable-accelerated-video-decoder \
   --enable-features=VaapiVideoDecoder,VaapiVideoEncoder \
-  --disable-features=Vulkan,UseChromeOSDirectVideoDecoder \
+  --disable-features=UseChromeOSDirectVideoDecoder \
   --ignore-gpu-blocklist \
   --disable-gpu-driver-bug-workaround \
-  --no-sandbox \
-  ${extra_options} |&
-  tee ./out.log
+  --vmodule=*/ozone/*=1,*/wayland/*=1,*/vaapi/*=4,*/viz/*=1,*/media/gpu/*=1 \
+  --enable-logging=stderr --v=0 \
+  ${extra_options} |& tee ./out.log
