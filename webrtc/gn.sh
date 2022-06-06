@@ -27,7 +27,11 @@ gn gen ${gn_dir} \
 	--args=" \
     is_debug=false \
     rtc_include_tests=true \
+\
+    rtc_use_h264 = true \
+    proprietary_codecs=true \
     ffmpeg_branding=\"Chrome\" \
+\
     ${logging_flags} \
     ${release_flags} \
     "
