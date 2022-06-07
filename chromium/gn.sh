@@ -20,7 +20,7 @@ fi
 
 gn gen ${gn_dir} \
 	--args=" \
-    is_official_build=true \
+    is_official_build=false \
     is_debug=false \
 \
     rtc_use_h264 = true \
