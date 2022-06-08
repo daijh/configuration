@@ -19,14 +19,14 @@ if [ ${release_build} == "true" ]; then
 fi
 
 gn gen ${gn_dir} \
-	--args=" \
-    is_official_build=false \
-    is_debug=false \
+--args=" \
+symbol_level=1 \
+is_official_build=false \
+is_debug=false \
 \
-    rtc_use_h264 = true \
-    proprietary_codecs=true \
-    ffmpeg_branding=\"Chrome\" \
+rtc_use_h264 = true \
+proprietary_codecs=true \
+ffmpeg_branding=\"Chrome\" \
 \
-    enable_hangout_services_extension=true \
-    ${release_flags} \
-    "
+enable_hangout_services_extension=true \
+"

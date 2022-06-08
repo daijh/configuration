@@ -2,6 +2,7 @@
 
 cros chrome-sdk --board=amd64-generic --nogoma --log-level=debug \
 --gn-extra-args=" \
+symbol_level=1 \
 is_official_build = false \
 is_debug=false \
 \
