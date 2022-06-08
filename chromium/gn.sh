@@ -20,6 +20,7 @@ fi
 
 gn gen ${gn_dir} \
 --args=" \
+chrome_pgo_phase = 0 \
 symbol_level=1 \
 is_official_build=false \
 is_debug=false \
