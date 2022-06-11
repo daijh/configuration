@@ -2,7 +2,7 @@
 
 PREFIX=./src/out/Default
 
-use_wayland=true
+use_wayland=false
 use_fake_capture=false
 use_system_media_driver=false
 debug=false
@@ -12,12 +12,12 @@ y4m_file=/home/webrtc/Downloads/chromium_video/bbb_1280x720-100frames.y4m
 gdb_cmd=""
 extra_options=""
 
-if [ ${use_system_media_driver} == "false" ]; then
+#if [ ${use_system_media_driver} == "false" ]; then
   #media_driver_prefix=~/third_party/media_samples/deps/out
-  media_driver_prefix=/opt/jdai12/dev/media_samples/deps/out
-  export LD_LIBRARY_PATH="${media_driver_prefix}/lib"
-  export LIBVA_DRIVERS_PATH="${media_driver_prefix}"
-fi
+#  media_driver_prefix=/opt/jdai12/dev/media_samples/deps/out
+#  export LD_LIBRARY_PATH="${media_driver_prefix}/lib"
+#  export LIBVA_DRIVERS_PATH="${media_driver_prefix}"
+#fi
 
 vainfo
 

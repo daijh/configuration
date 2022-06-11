@@ -4,7 +4,7 @@ release_build=false
 
 release_flags=""
 logging_flags=""
-gn_dir="tout/Default"
+gn_dir="out/Default"
 
 if [[ $1 == "-r" ]]; then
 	release_build=true
@@ -12,7 +12,7 @@ fi
 echo "Is Release Build: ${release_build}"
 
 if [ ${release_build} == "true" ]; then
-	gn_dir="tout/Release"
+	gn_dir="out/Release"
 
 	release_flags=""
 fi
@@ -25,7 +25,7 @@ logging_flags="\
     "
 gn gen ${gn_dir} \
 	--args=" \
-    is_debug=false \
+    is_debug=true \
     rtc_include_tests=true \
 \
     rtc_use_h264 = true \

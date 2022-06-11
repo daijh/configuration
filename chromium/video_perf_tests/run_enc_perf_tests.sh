@@ -6,11 +6,11 @@ if [ ! -f ${THIS} ]; then
 fi
 
 CURRENT=$(dirname ${THIS})
-OUTPUT_DIR=video_dec_perf_result
+OUTPUT_DIR=video_enc_perf_result
 
 rm -rf ${OUTPUT_DIR}
 
-function RunDecPerfTests() {
+function RunEncPerfTests() {
   logging=$2
   vaapi_lock=$1
 
@@ -20,13 +20,11 @@ function RunDecPerfTests() {
     1280x720
   )
   for resolution in "${test_resolutions[@]}"; do
-    test_stream_dir=test_streams/bbb_dec_test_streams
-    #test_stream=${test_stream_dir}/bbb-$resolution-40frames.h264
-    test_stream=${test_stream_dir}/bbb-$resolution-100frames.h264
-    #test_stream=${test_stream_dir}/bbb-$resolution-10890frames.h264
+    test_stream_dir=test_streams/bbb_enc_test_streams
+    test_stream=${test_stream_dir}/bbb_${resolution}_vp9-100frames.webm
 
-    program="src/out/Default/video_decode_accelerator_perf_tests \
---gtest_filter=*MeasureUncappedPerformance_TenConcurrentDecoders* \
+    program="src/out/Default/video_encode_accelerator_perf_tests \
+--gtest_filter=*MeasureUncappedPerformance_MultipleConcurrentEncoders* \
 $test_stream"
 
     if [ ${vaapi_lock} == "false" ]; then
@@ -54,7 +52,7 @@ $test_stream"
 }
 
 #params: vaapi_lock logging
-RunDecPerfTests true false
-RunDecPerfTests false false
+RunEncPerfTests true false
+RunEncPerfTests false false
 
 find ${OUTPUT_DIR} -type f | sort | xargs grep FPS
