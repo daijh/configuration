@@ -2,8 +2,8 @@
 
 cros chrome-sdk --board=amd64-generic --nogoma --log-level=debug \
 --gn-extra-args=" \
-symbol_level=1 \
-is_official_build = false \
+symbol_level=0 \
+is_official_build = true \
 is_debug=false \
 \
 rtc_use_h264 = true \
