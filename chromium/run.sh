@@ -1,10 +1,14 @@
 #!/bin/bash -ex
 
+#url=$1
+url=file:///home/webrtc/bbb_1280x720_vp9.webm
+
 PREFIX=./src/out/Default
 
-use_wayland=false
+use_wayland=true
 use_fake_capture=false
 use_system_media_driver=false
+use_hw_overlay=false
 debug=false
 
 y4m_file=/home/webrtc/Downloads/chromium_video/bbb_1280x720-100frames.y4m
@@ -28,9 +32,20 @@ if [ ${use_fake_capture} == "true" ]; then
 --use-file-for-fake-video-capture=${y4m_file}"
 fi
 
+if [ ${use_hw_overlay} == "true" ]; then
+  extra_options="${extra_options}"
+#--enable-hardware-overlays="single-fullscreen,single-on-top,underlay"
+else
+  extra_options="${extra_options} \
+--enable-hardware-overlays=\"\""
+fi
+
 if [ ${use_wayland} == "true" ]; then
   extra_options="${extra_options} \
 --ozone-platform=wayland"
+else
+  extra_options="${extra_options} \
+--ozone-platform=x11"
 fi
 
 if [ ${debug} == "true" ]; then
@@ -48,4 +63,5 @@ ${gdb_cmd} \
   --disable-gpu-driver-bug-workaround \
   --vmodule=*/ozone/*=1,*/wayland/*=1,*/vaapi/*=4,*/viz/*=1,*/media/gpu/*=1 \
   --enable-logging=stderr --v=0 \
-  ${extra_options} |& tee ./out.log
+  ${extra_options} ${url} |& tee ./out.log
+
