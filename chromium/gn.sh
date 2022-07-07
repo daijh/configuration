@@ -1,5 +1,4 @@
-#!/bin/bash
-##!/bin/bash -ex
+#!/bin/bash -ex
 
 # define
 GN_DIR="out/Default"
@@ -28,10 +27,9 @@ else
 dcheck_always_on=false"
 fi
 
-# cmd
-CMD="
+# run cmd
 gn gen ${GN_DIR} \
---args='\
+--args=" \
 chrome_pgo_phase=0 \
 symbol_level=1 \
 is_official_build=false \
@@ -39,16 +37,9 @@ is_debug=false \
 \
 rtc_use_h264=true \
 proprietary_codecs=true \
-ffmpeg_branding='Chrome' \
+ffmpeg_branding=\"Chrome\" \
 \
 enable_hangout_services_extension=true \
 \
-${EXTRA_OPTIONS}\
-'
-"
-
-echo ${CMD}
-
-# run
-${CMD}
+${EXTRA_OPTIONS} "
 
