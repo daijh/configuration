@@ -3,10 +3,10 @@
 
 ## define
 
-#URL=$1
-URL=file://~/Videos/BBB_720p_4Mbps_audio_44100_30fps_HP.mp4
+URL=$1
+#URL=file://~/Videos/BBB_720p_4Mbps_audio_44100_30fps_HP.mp4
 
-Y4M_FILE=~/bbb_1280x720-100frames.y4m
+Y4M_FILE=~/Videos/bbb_1280x720-100frames.y4m
 
 PREFIX=./src/out/Default
 
@@ -14,9 +14,11 @@ GDB_CMD=""
 
 EXTRA_OPTIONS=""
 
+LOG=out.log
+
 ## switch
-USE_WAYLAND=true
-USE_FAKE_CAPTURE=false
+USE_WAYLAND=false
+USE_FAKE_CAPTURE=true
 USE_HW_OVERLAY=false
 USE_ChromeOSDirectVideoDecoder=false
 
@@ -70,9 +72,15 @@ ${PREFIX}/chrome \
 --disable-gpu-driver-bug-workaround \
 --vmodule=*/ozone/*=1,*/wayland/*=1,*/vaapi/*=4,*/viz/*=1,*/media/gpu/*=1 \
 --enable-logging=stderr --v=0 \
-${EXTRA_OPTIONS} ${URL} |& tee ./out.log"
+${EXTRA_OPTIONS} ${URL}"
 
-vainfo
-echo $CMD
-CMD
+vainfo > ${LOG}
+
+echo "" >> ${LOG}
+echo ${CMD} >> ${LOG}
+
+echo "" >> ${LOG}
+echo "Start Chromium..." >> ${LOG}
+echo "" >> ${LOG}
+${CMD} |& tee -a ${LOG}
 
