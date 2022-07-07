@@ -50,5 +50,5 @@ ${EXTRA_OPTIONS}\
 echo ${CMD}
 
 # run
-CMD
+${CMD}
 
