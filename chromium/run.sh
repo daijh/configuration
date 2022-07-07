@@ -1,67 +1,78 @@
-#!/bin/bash -ex
+#!/bin/bash
+##!/bin/bash -ex
 
-#url=$1
-url=file:///home/webrtc/bbb_1280x720_vp9.webm
+## define
+
+#URL=$1
+URL=file://~/Videos/BBB_720p_4Mbps_audio_44100_30fps_HP.mp4
+
+Y4M_FILE=~/bbb_1280x720-100frames.y4m
 
 PREFIX=./src/out/Default
 
-use_wayland=true
-use_fake_capture=false
-use_system_media_driver=false
-use_hw_overlay=false
-debug=false
+GDB_CMD=""
 
-y4m_file=/home/webrtc/Downloads/chromium_video/bbb_1280x720-100frames.y4m
+EXTRA_OPTIONS=""
 
-gdb_cmd=""
-extra_options=""
+## switch
+USE_WAYLAND=true
+USE_FAKE_CAPTURE=false
+USE_HW_OVERLAY=false
+USE_ChromeOSDirectVideoDecoder=false
 
-#if [ ${use_system_media_driver} == "false" ]; then
-  #media_driver_prefix=~/third_party/media_samples/deps/out
-#  media_driver_prefix=/opt/jdai12/dev/media_samples/deps/out
-#  export LD_LIBRARY_PATH="${media_driver_prefix}/lib"
-#  export LIBVA_DRIVERS_PATH="${media_driver_prefix}"
-#fi
+USE_GDB=false
 
-vainfo
-
-if [ ${use_fake_capture} == "true" ]; then
-  extra_options="${extra_options} \
+## switch body
+if [ ${USE_FAKE_CAPTURE} == "true" ]; then
+  EXTRA_OPTIONS="${EXTRA_OPTIONS} \
 --use-fake-ui-for-media-stream \
 --use-fake-device-for-media-stream \
---use-file-for-fake-video-capture=${y4m_file}"
+--use-file-for-fake-video-capture=${Y4M_FILE}"
 fi
 
-if [ ${use_hw_overlay} == "true" ]; then
-  extra_options="${extra_options}"
-#--enable-hardware-overlays="single-fullscreen,single-on-top,underlay"
-else
-  extra_options="${extra_options} \
---enable-hardware-overlays=\"\""
-fi
-
-if [ ${use_wayland} == "true" ]; then
-  extra_options="${extra_options} \
---ozone-platform=wayland"
-else
-  extra_options="${extra_options} \
---ozone-platform=x11"
-fi
-
-if [ ${debug} == "true" ]; then
-  gdb_cmd="gdb -args"
-  extra_options="${extra_options} \
+if [ ${USE_GDB} == "true" ]; then
+  GDB_CMD="gdb -args"
+  EXTRA_OPTIONS="${EXTRA_OPTIONS} \
 --debug --single-process"
 fi
 
+if [ ${USE_ChromeOSDirectVideoDecoder} == "true" ]; then
+  EXTRA_OPTIONS="${EXTRA_OPTIONS} \
+--enable-features=VaapiVideoDecoder,VaapiVideoEncoder,UseChromeOSDirectVideoDecoder"
+else
+  EXTRA_OPTIONS="${EXTRA_OPTIONS} \
+--enable-features=VaapiVideoDecoder,VaapiVideoEncoder \
+--disable-features=UseChromeOSDirectVideoDecoder"
+fi
+
+if [ ${USE_HW_OVERLAY} == "true" ]; then
+  EXTRA_OPTIONS="${EXTRA_OPTIONS}"
+#--enable-hardware-overlays="single-fullscreen,single-on-top,underlay"
+else
+  EXTRA_OPTIONS="${EXTRA_OPTIONS} \
+--enable-hardware-overlays=\"\""
+fi
+
+if [ ${USE_WAYLAND} == "true" ]; then
+  EXTRA_OPTIONS="${EXTRA_OPTIONS} \
+--ozone-platform=wayland"
+else
+  EXTRA_OPTIONS="${EXTRA_OPTIONS} \
+--ozone-platform=x11"
+fi
+
+## run
+CMD="\
 ${gdb_cmd} \
-  ${PREFIX}/chrome \
-  --use-gl=egl \
-  --enable-features=VaapiVideoDecoder,VaapiVideoEncoder \
-  --disable-features=UseChromeOSDirectVideoDecoder \
-  --ignore-gpu-blocklist \
-  --disable-gpu-driver-bug-workaround \
-  --vmodule=*/ozone/*=1,*/wayland/*=1,*/vaapi/*=4,*/viz/*=1,*/media/gpu/*=1 \
-  --enable-logging=stderr --v=0 \
-  ${extra_options} ${url} |& tee ./out.log
+${PREFIX}/chrome \
+--use-gl=egl \
+--ignore-gpu-blocklist \
+--disable-gpu-driver-bug-workaround \
+--vmodule=*/ozone/*=1,*/wayland/*=1,*/vaapi/*=4,*/viz/*=1,*/media/gpu/*=1 \
+--enable-logging=stderr --v=0 \
+${EXTRA_OPTIONS} ${URL} |& tee ./out.log"
+
+vainfo
+echo $CMD
+CMD
 
