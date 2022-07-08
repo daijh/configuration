@@ -70,14 +70,16 @@ ${PREFIX}/chrome \
 --use-gl=egl \
 --ignore-gpu-blocklist \
 --disable-gpu-driver-bug-workaround \
---vmodule=*/ozone/*=1,*/wayland/*=1,*/vaapi/*=4,*/viz/*=1,*/media/gpu/*=1 \
+--vmodule=*/ozone/*=1,*/wayland/*=1,*/vaapi/*=4,*/viz/*=1,*/media/*=4 \
 --enable-logging=stderr --v=0 \
 ${EXTRA_OPTIONS} ${URL}"
 
-vainfo > ${LOG}
+echo "" > ${LOG}
+
+echo ${CMD} >> ${LOG}
 
 echo "" >> ${LOG}
-echo ${CMD} >> ${LOG}
+vainfo >> ${LOG}
 
 echo "" >> ${LOG}
 echo "Start Chromium..." >> ${LOG}
