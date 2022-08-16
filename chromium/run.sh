@@ -17,8 +17,8 @@ EXTRA_OPTIONS=""
 LOG=out.log
 
 ## switch
-USE_WAYLAND=false
-USE_FAKE_CAPTURE=true
+USE_WAYLAND=true
+USE_FAKE_CAPTURE=false
 USE_HW_OVERLAY=false
 USE_ChromeOSDirectVideoDecoder=false
 
