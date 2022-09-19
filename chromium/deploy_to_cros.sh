@@ -1,6 +1,7 @@
 #!/bin/bash -ex
 
-SDK_BOARD=amd64-generic
-IP_ADDR=172.25.235.137
+OUT=out_amd64-generic/Release
+#OUT=out_amd64-generic/default-build
+IP_ADDR=10.239.158.73
 
-deploy_chrome --build-dir=out_${SDK_BOARD}/Release --device=$IP_ADDR
+deploy_chrome --build-dir=${OUT} --device=$IP_ADDR

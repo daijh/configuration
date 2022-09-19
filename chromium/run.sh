@@ -20,14 +20,13 @@ LOG=out.log
 USE_WAYLAND=true
 USE_FAKE_CAPTURE=false
 USE_HW_OVERLAY=false
-USE_ChromeOSDirectVideoDecoder=false
+USE_ChromeOSDirectVideoDecoder=true
 
 USE_GDB=false
 
 ## switch body
 if [ ${USE_FAKE_CAPTURE} == "true" ]; then
   EXTRA_OPTIONS="${EXTRA_OPTIONS} \
---use-fake-ui-for-media-stream \
 --use-fake-device-for-media-stream \
 --use-file-for-fake-video-capture=${Y4M_FILE}"
 fi
@@ -70,7 +69,8 @@ ${PREFIX}/chrome \
 --use-gl=egl \
 --ignore-gpu-blocklist \
 --disable-gpu-driver-bug-workaround \
---vmodule=*/ozone/*=1,*/wayland/*=1,*/vaapi/*=4,*/viz/*=1,*/media/*=4 \
+--use-fake-ui-for-media-stream \
+--vmodule=*/ozone/*=1,*/wayland/*=1,*/vaapi/*=4,*/viz/*=1,*/media/*=4,*/shared_image/*=4 \
 --enable-logging=stderr --v=0 \
 ${EXTRA_OPTIONS} ${URL}"
 
