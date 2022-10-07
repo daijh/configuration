@@ -19,13 +19,5 @@ samba cifs-utils build-essential automake global cmake libtool
 
     sudo -E apt install -y shfmt
     sudo -E apt install -y nodejs npm
-    npm install --save-dev --save-exact prettier
+    sudo -E npm install -g --save-dev --save-exact prettier
 fi
-
-# git
-echo -e "[include]\n\tpath = ${ROOT}/gitconfig" >> ~/.gitconfig
-
-# tmux
-ln -s -v ${ROOT}/tmux.conf ~/.tmux.conf
-
-${ROOT}/install_vim.sh

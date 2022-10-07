@@ -27,6 +27,7 @@ set expandtab
 " ===FileType===
 
 autocmd FileType sh setlocal tabstop=4 softtabstop=4 shiftwidth=4
+autocmd Filetype html,javascript setlocal tabstop=2 softtabstop=2 shiftwidth=2 tw=80 expandtab
 
 autocmd FileType c,cpp : set foldmethod=syntax
 autocmd FileType c,cpp : set nofoldenable
