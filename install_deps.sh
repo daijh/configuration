@@ -15,7 +15,7 @@ samba cifs-utils build-essential automake global cmake libtool
     sudo -E apt install -y ascii aview imagemagick
     sudo -E apt install -y cmatrix figlet hollywood
     sudo -E apt install -y fortunes fortunes-zh cowsay lolcat
-    sudo -E apt install -y nfs-common gnome-remote-desktop
+    sudo -E apt install -y nfs-common nfs-kernel-server gnome-remote-desktop
 
     sudo -E apt install -y shfmt cmake-format
     sudo -E apt install -y nodejs npm
