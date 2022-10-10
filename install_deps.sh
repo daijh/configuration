@@ -17,7 +17,7 @@ samba cifs-utils build-essential automake global cmake libtool
     sudo -E apt install -y fortunes fortunes-zh cowsay lolcat
     sudo -E apt install -y nfs-common gnome-remote-desktop
 
-    sudo -E apt install -y shfmt
+    sudo -E apt install -y shfmt cmake-format
     sudo -E apt install -y nodejs npm
     sudo -E npm install -g --save-dev --save-exact prettier
 fi
