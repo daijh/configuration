@@ -5,7 +5,7 @@ GN_DIR="out/Default"
 EXTRA_OPTIONS=""
 
 # switch
-USE_SYSTEM_MINIGBM=true
+USE_SYSTEM_MINIGBM=false
 USE_DCHECK=true
 
 # switch body
