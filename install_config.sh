@@ -7,7 +7,7 @@ fi
 ROOT=$(dirname ${THIS})
 
 # git
-echo -e "[include]\n\tpath = ${ROOT}/gitconfig" >> ~/.gitconfig
+echo -e "[include]\n\tpath = ${ROOT}/gitconfig" >>~/.gitconfig
 
 # tmux
 ln -s -v ${ROOT}/tmux.conf ~/.tmux.conf
