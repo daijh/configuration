@@ -15,8 +15,8 @@ use_system_minigbm=true \
 use_intel_minigbm=false"
 else
   EXTRA_OPTIONS="${EXTRA_OPTIONS} \
-use_system_minigbm=false \
-use_intel_minigbm=true"
+use_system_minigbm=true \
+use_intel_minigbm=false"
 fi
 
 if [ ${USE_DCHECK} == "true" ]; then
