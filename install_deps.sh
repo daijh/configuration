@@ -6,18 +6,28 @@ fi
 
 ROOT=$(dirname ${THIS})
 
-source /etc/os-release
-if [ $NAME = "Ubuntu" ]; then
-  sudo -E apt install -y apt-file
-  sudo -E apt install -y git tig exuberant-ctags tmux tree ack-grep vim ssh \
-    samba cifs-utils build-essential automake global cmake libtool
+install_deps_for_dev() {
+  sudo -E apt install -y apt-file git tig exuberant-ctags tmux tree ack-grep vim build-essential automake global cmake libtool
+  sudo -E apt install -y curl ssh samba cifs-utils nfs-common nfs-kernel-server gnome-remote-desktop
   sudo -E apt install -y lm-sensors cpuid cpuinfo hwloc
+
+  sudo -E apt install -y shfmt cmake-format
+
+  sudo -E apt install -y nodejs npm
+  #sudo -E npm install -g --save-dev --save-exact prettier
+}
+
+install_deps_others() {
   sudo -E apt install -y ascii aview imagemagick
   sudo -E apt install -y cmatrix figlet hollywood
   sudo -E apt install -y fortunes fortunes-zh cowsay lolcat
-  sudo -E apt install -y nfs-common nfs-kernel-server gnome-remote-desktop
+}
 
-  sudo -E apt install -y shfmt cmake-format
-  sudo -E apt install -y nodejs npm
-  sudo -E npm install -g --save-dev --save-exact prettier
+source /etc/os-release
+if [ $NAME != "Ubuntu" ]; then
+  echo "Unsupported OS: ${NAME}"
+  exit
 fi
+
+install_deps_for_dev
+install_deps_others
