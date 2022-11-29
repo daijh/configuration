@@ -13,3 +13,4 @@ echo -n ${PASSWORD} | gnome-keyring-daemon -l -d
 gnome-keyring-daemon -s
 #systemctl --user daemon-reload
 systemctl --user restart gnome-remote-desktop
+systemctl --user status gnome-remote-desktop
