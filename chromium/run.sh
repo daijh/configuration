@@ -70,7 +70,7 @@ ${PREFIX}/chrome \
 --ignore-gpu-blocklist \
 --disable-gpu-driver-bug-workaround \
 --use-fake-ui-for-media-stream \
---vmodule=*/ozone/*=1,*/wayland/*=1,*/vaapi/*=4,*/viz/*=1,*/media/*=4,*/shared_image/*=4 \
+--vmodule=*/ozone/*=1,*/wayland/*=1,*/vaapi/*=1,*/viz/*=1,*/media/*=1,*/shared_image/*=1 \
 --enable-logging=stderr --v=0 \
 ${EXTRA_OPTIONS} ${URL}"
 
