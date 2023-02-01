@@ -6,7 +6,7 @@ EXTRA_OPTIONS=""
 
 # switch
 USE_SYSTEM_MINIGBM=false
-USE_DCHECK=true
+USE_DCHECK=false
 
 # switch body
 if [ ${USE_SYSTEM_MINIGBM} == "true" ]; then
@@ -22,9 +22,6 @@ fi
 if [ ${USE_DCHECK} == "true" ]; then
   EXTRA_OPTIONS="${EXTRA_OPTIONS} \
 dcheck_always_on=true"
-else
-  EXTRA_OPTIONS="${EXTRA_OPTIONS} \
-dcheck_always_on=false"
 fi
 
 # run cmd
