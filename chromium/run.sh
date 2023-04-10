@@ -17,7 +17,7 @@ EXTRA_OPTIONS=""
 LOG=out.log
 
 ## switch
-USE_WAYLAND=true
+USE_WAYLAND=false
 USE_FAKE_CAPTURE=false
 USE_HW_OVERLAY=false
 USE_ChromeOSDirectVideoDecoder=true
@@ -39,10 +39,10 @@ fi
 
 if [ ${USE_ChromeOSDirectVideoDecoder} == "true" ]; then
   EXTRA_OPTIONS="${EXTRA_OPTIONS} \
---enable-features=VaapiVideoDecoder,VaapiVideoEncoder,UseChromeOSDirectVideoDecoder"
+--enable-features=VaapiVideoDecodeLinuxGL,VaapiVideoDecoder,VaapiVideoEncoder,UseChromeOSDirectVideoDecoder"
 else
   EXTRA_OPTIONS="${EXTRA_OPTIONS} \
---enable-features=VaapiVideoDecoder,VaapiVideoEncoder \
+--enable-features=VaapiVideoDecodeLinuxGL,VaapiVideoDecoder,VaapiVideoEncoder \
 --disable-features=UseChromeOSDirectVideoDecoder"
 fi
 
@@ -66,13 +66,14 @@ fi
 CMD="\
 ${gdb_cmd} \
 ${PREFIX}/chrome \
---use-gl=egl \
 --ignore-gpu-blocklist \
 --disable-gpu-driver-bug-workaround \
 --use-fake-ui-for-media-stream \
 --vmodule=*/ozone/*=1,*/wayland/*=1,*/vaapi/*=1,*/viz/*=1,*/media/*=1,*/shared_image/*=1 \
 --enable-logging=stderr --v=0 \
 ${EXTRA_OPTIONS} ${URL}"
+
+#--use-gl=egl \
 
 echo "" > ${LOG}
 
@@ -85,4 +86,3 @@ echo "" >> ${LOG}
 echo "Start Chromium..." >> ${LOG}
 echo "" >> ${LOG}
 ${CMD} |& tee -a ${LOG}
-
