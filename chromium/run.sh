@@ -37,9 +37,11 @@ if [ ${USE_GDB} == "true" ]; then
 --debug --single-process"
 fi
 
+#Vulkakn
 if [ ${USE_ChromeOSDirectVideoDecoder} == "true" ]; then
   EXTRA_OPTIONS="${EXTRA_OPTIONS} \
---enable-features=VaapiVideoDecodeLinuxGL,VaapiVideoDecoder,VaapiVideoEncoder,UseChromeOSDirectVideoDecoder"
+--enable-features=VaapiVideoDecodeLinuxGL,VaapiVideoDecoder,VaapiVideoEncoder,UseChromeOSDirectVideoDecoder \
+--disable-features="
 else
   EXTRA_OPTIONS="${EXTRA_OPTIONS} \
 --enable-features=VaapiVideoDecodeLinuxGL,VaapiVideoDecoder,VaapiVideoEncoder \
@@ -62,6 +64,10 @@ else
 --ozone-platform=x11"
 fi
 
+EXTRA_OPTIONS="${EXTRA_OPTIONS} \
+--use-gl=angle --use-angle=gl
+"
+
 ## run
 CMD="\
 ${gdb_cmd} \
@@ -72,8 +78,6 @@ ${PREFIX}/chrome \
 --vmodule=*/ozone/*=1,*/wayland/*=1,*/vaapi/*=1,*/viz/*=1,*/media/*=1,*/shared_image/*=1 \
 --enable-logging=stderr --v=0 \
 ${EXTRA_OPTIONS} ${URL}"
-
-#--use-gl=egl \
 
 echo "" > ${LOG}
 
