@@ -70,7 +70,7 @@ EXTRA_OPTIONS="${EXTRA_OPTIONS} \
 
 ## run
 CMD="\
-${gdb_cmd} \
+${GDB_CMD} \
 ${PREFIX}/chrome \
 --ignore-gpu-blocklist \
 --disable-gpu-driver-bug-workaround \
