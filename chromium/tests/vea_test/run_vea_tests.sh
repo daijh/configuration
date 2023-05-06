@@ -6,20 +6,29 @@ if [ ! -f ${THIS} ]; then
 fi
 CURRENT=$(dirname ${THIS})
 
-#PREFIX=$(realpath ${CURRENT}/../src/out/Default/)
-PREFIX=${CURRENT}/../src/out/Default/
+PREFIX=~/third_party/nfs/chromium-linux/src/out/Default/
 
-echo "${PREFIX}"
+CODEC="vp9"
+BITRATE=2250000
+LOG=vea_tests.log
 
-#data=${CURRENT}/data/staitc-screen-1280x720-300frames.i420.yuv
-#data=${CURRENT}/data/staitc-screen-640x360-300frames.i420.yuv
-data=${CURRENT}/data/staitc-screen-320x180-300frames.i420.yuv
+INPUT_DIR=~/third_party/test_streams/vp9_lossless_static
+INPUT_YUV=youtube_screenshot_static.webm
+INPUT=${INPUT_DIR}/${INPUT_YUV}
 
 rm VideoEncoderTest -rf
 
-${PREFIX}/video_encode_accelerator_tests \
-  --codec=vp9 \
-  --bitrate=288000\
-  --output_bitstream ${data} \
+CMD="${PREFIX}/video_encode_accelerator_tests \
+  --codec=${CODEC} \
+  --bitrate=${BITRATE} \
+  --output_bitstream ${INPUT} \
   --gtest_filter=VideoEncoderTest.FlushAtEndOfStream \
-  --vmodule=*/media/gpu/*=4 |& tee vea_tests.log
+  --vmodule=*/media/gpu/*=4 \
+"
+
+${CMD} |& tee ${LOG}
+
+echo ""
+echo "PREFIX: ${PREFIX}"
+echo "INPUT: ${INPUT}"
+echo "${CMD}"
