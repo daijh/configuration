@@ -8,18 +8,18 @@ import subprocess
 import argparse
 import shutil
 
-ORIG_THIS = pathlib.Path().resolve()
+# pwd
+PWD = pathlib.Path().resolve()
 
-THIS = pathlib.Path().resolve()
-
-PREFIX = THIS.joinpath('src/out/Default')
+# executatble prefix
+ROOT = PWD
 
 
 def exec_bash(cmd, check=True, env=None, log_file=None):
-    print(cmd)
+    print(f'{cmd}\n')
 
     if log_file:
-        print(f'Write log: {log_file}')
+        print(f'Write log: {log_file}\n')
 
         result = subprocess.run(cmd.split(),
                                 check=check,
@@ -87,7 +87,7 @@ def make_default_pattern_test_suit():
 
 
 def run_pattern_tests(pattern_test_suit, force=None):
-    output_dir = ORIG_THIS.joinpath(f'video_encoder_tests-pattern')
+    output_dir = PWD.joinpath(f'video_encoder_tests-pattern')
     if (output_dir.exists()):
         if (force):
             shutil.rmtree(str(output_dir))
@@ -120,9 +120,11 @@ def run_pattern_tests(pattern_test_suit, force=None):
                     log_file = log_dir.joinpath(
                         f'{codec}-{scalability_mode}.log')
 
-                    cmd = f'{PREFIX}/video_encoder --video_codec={codec} --scalability_mode={scalability_mode} ' \
+                    print(f'\n+++Run Case\n')
+
+                    cmd = f'video_encoder --video_codec={codec} --scalability_mode={scalability_mode} ' \
                             f'--width={encode_setting["width"]} --height={encode_setting["height"]} ' \
-                            f'--frame_rate={encode_setting["frame_rate"]} --bitrate={encode_setting["bitrate_kbps"]} ' \
+                            f'--frame_rate={encode_setting["frame_rate"]} --bitrate_kbps={encode_setting["bitrate_kbps"]} ' \
                             f'--raw_frame_generator={pattern} '
                     exec_bash(cmd,
                               check=False,
@@ -178,7 +180,7 @@ def make_ivf_test_suit():
 
 
 def run_ivf_input_tests(ivf_test_suit, force=None):
-    output_dir = ORIG_THIS.joinpath(f'video_encoder_tests-ivf')
+    output_dir = PWD.joinpath(f'video_encoder_tests-ivf')
     if (output_dir.exists()):
         if (force):
             shutil.rmtree(str(output_dir))
@@ -217,16 +219,17 @@ def run_ivf_input_tests(ivf_test_suit, force=None):
                     log_file = log_dir.joinpath(
                         f'{codec}-{scalability_mode}.log')
 
-                    cmd = f'{PREFIX}/video_encoder --video_codec={codec} --scalability_mode={scalability_mode} ' \
+                    print(f'\n+++Run Case\n')
+
+                    cmd = f'video_encoder --video_codec={codec} --scalability_mode={scalability_mode} ' \
                             f'--width={encode_setting["width"]} --height={encode_setting["height"]} ' \
-                            f'--frame_rate={encode_setting["frame_rate"]} --bitrate={encode_setting["bitrate_kbps"]} ' \
+                            f'--frame_rate={encode_setting["frame_rate"]} --bitrate_kbps={encode_setting["bitrate_kbps"]} ' \
                             f'--ivf_input_file={str(ivf_path)} '
                     exec_bash(cmd,
                               check=False,
                               log_file=str(log_file.resolve()))
 
     return
-
 
 
 if __name__ == '__main__':
@@ -250,10 +253,17 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.root:
-        THIS = pathlib.Path(args.root).resolve()
-        PREFIX = THIS.joinpath('src/out/Default')
+        ROOT = pathlib.Path(args.root).resolve()
+        print(f'Set ROOT, {ROOT}')
 
-        print(f'Set ROOT, {THIS}')
+    # Set env
+    # WebRTC
+    PREFIX = ROOT.joinpath('src/out/Default')
+
+    my_env = os.environ
+    if not 'PATH' in my_env:
+        my_env['PATH'] = ''
+    my_env['PATH'] = f"{str(PREFIX)}:{my_env['PATH']}"
 
     if args.run_ivf_tests:
         ivf_test_suit = make_ivf_test_suit()

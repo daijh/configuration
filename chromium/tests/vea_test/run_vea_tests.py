@@ -8,9 +8,11 @@ import subprocess
 import argparse
 import shutil
 
-THIS = pathlib.Path().resolve()
-ROOT = THIS
+# pwd
+PWD = pathlib.Path().resolve()
 
+# executatble prefix
+ROOT = PWD
 
 def exec_bash(cmd, check=True, env=None, log_file=None):
     print(cmd)
@@ -85,7 +87,7 @@ def make_vea_test_suite():
 
 
 def run_vea_tests(vea_test_suite, force=None):
-    output_dir = THIS.joinpath(f'vea_encoder_tests')
+    output_dir = PWD.joinpath(f'vea_encoder_tests')
     if (output_dir.exists()):
         if (force):
             shutil.rmtree(str(output_dir))
@@ -172,10 +174,11 @@ if __name__ == '__main__':
     if args.root:
         ROOT = pathlib.Path(args.root).resolve()
 
-        print(f'Set ROOT, {THIS}')
+        print(f'Set ROOT, {ROOT}')
 
+    # Set env
+    # Chromium
     PREFIX = ROOT.joinpath(f'src/out/Default')
-    print(f'Set PATH, {PREFIX}')
 
     my_env = os.environ
     if not 'PATH' in my_env:
