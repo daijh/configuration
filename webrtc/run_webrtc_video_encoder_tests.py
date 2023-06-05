@@ -33,6 +33,7 @@ def exec_bash(cmd, check=True, env=None, log_file=None):
         result = subprocess.run(cmd.split(), check=check, env=env)
 
     result.stdout = None
+
     print(result)
     return result
 
@@ -81,6 +82,7 @@ def make_default_pattern_test_suit():
 
     pattern_test_suit.append(pattern_test)
 
+    # return all test cases
     return pattern_test_suit
 
 
@@ -171,6 +173,7 @@ def make_ivf_test_suit():
 
     ivf_input_test_suit.append(ivf_input_test)
 
+    # return all test cases
     return ivf_input_test_suit
 
 
