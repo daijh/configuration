@@ -1,4 +1,4 @@
-#!/usr/bin/python3 -E
+#!/usr/bin/python3 -u
 
 import sys
 import os
@@ -9,10 +9,7 @@ import argparse
 import shutil
 
 # pwd
-PWD = pathlib.Path().resolve()
-
-# executatble prefix
-ROOT = PWD
+global_pwd = pathlib.Path().resolve()
 
 
 def exec_bash(cmd, check=True, env=None, log_file=None):
@@ -107,8 +104,11 @@ def make_default_pattern_test_suit():
     return pattern_test_suit
 
 
-def run_pattern_tests(pattern_test_suit, force=None):
-    output_dir = PWD.joinpath(f'video_encoder_tests-pattern')
+def run_pattern_tests(pattern_test_suit,
+                      force=None,
+                      frames=300,
+                      key_frame_interval=100):
+    output_dir = global_pwd.joinpath(f'video_encoder_tests-pattern')
     if (output_dir.exists()):
         if (force):
             shutil.rmtree(str(output_dir))
@@ -146,7 +146,7 @@ def run_pattern_tests(pattern_test_suit, force=None):
                     cmd = f'video_encoder --video_codec={codec} --scalability_mode={scalability_mode} ' \
                             f'--width={encode_setting["width"]} --height={encode_setting["height"]} ' \
                             f'--frame_rate={encode_setting["frame_rate"]} --bitrate_kbps={encode_setting["bitrate_kbps"]} ' \
-                            f'--raw_frame_generator={pattern} '
+                            f'--raw_frame_generator={pattern} --frames={frames} --key_frame_interval={key_frame_interval} '
                     exec_bash(cmd,
                               check=False,
                               log_file=str(log_file.resolve()))
@@ -200,8 +200,11 @@ def make_ivf_test_suit():
     return ivf_input_test_suit
 
 
-def run_ivf_input_tests(ivf_test_suit, force=None):
-    output_dir = PWD.joinpath(f'video_encoder_tests-ivf')
+def run_ivf_input_tests(ivf_test_suit,
+                        force=None,
+                        frames=300,
+                        key_frame_interval=100):
+    output_dir = global_pwd.joinpath(f'video_encoder_tests-ivf')
     if (output_dir.exists()):
         if (force):
             shutil.rmtree(str(output_dir))
@@ -245,7 +248,7 @@ def run_ivf_input_tests(ivf_test_suit, force=None):
                     cmd = f'video_encoder --video_codec={codec} --scalability_mode={scalability_mode} ' \
                             f'--width={encode_setting["width"]} --height={encode_setting["height"]} ' \
                             f'--frame_rate={encode_setting["frame_rate"]} --bitrate_kbps={encode_setting["bitrate_kbps"]} ' \
-                            f'--ivf_input_file={str(ivf_path)} '
+                            f'--ivf_input_file={str(ivf_path)} --frames={frames} --key_frame_interval={key_frame_interval} '
                     exec_bash(cmd,
                               check=False,
                               log_file=str(log_file.resolve()))
@@ -253,7 +256,7 @@ def run_ivf_input_tests(ivf_test_suit, force=None):
     return
 
 
-if __name__ == '__main__':
+def main() -> int:
     parser = argparse.ArgumentParser(allow_abbrev=False)
     parser.add_argument('-r',
                         '--root',
@@ -273,22 +276,34 @@ if __name__ == '__main__':
                         help="Run ivf input tests")
     args = parser.parse_args()
 
+    root = pathlib.Path().resolve()
     if args.root:
-        ROOT = pathlib.Path(args.root).resolve()
-        print(f'Set ROOT, {ROOT}')
+        root = pathlib.Path(args.root).resolve()
+    print(f'Set root, {root}')
 
-    # Set env
-    # WebRTC
-    PREFIX = ROOT.joinpath('src/out/Default')
+    # Set webrtc prefix to env
+    webrtc_prefix = root.joinpath('src/out/Default')
 
     my_env = os.environ
     if not 'PATH' in my_env:
         my_env['PATH'] = ''
-    my_env['PATH'] = f"{str(PREFIX)}:{my_env['PATH']}"
+    my_env['PATH'] = f"{str(webrtc_prefix)}:{my_env['PATH']}"
 
     if args.run_ivf_tests:
         ivf_test_suit = make_ivf_test_suit()
-        run_ivf_input_tests(ivf_test_suit, force=args.force_delete_outputs)
+        run_ivf_input_tests(ivf_test_suit,
+                            force=args.force_delete_outputs,
+                            frames=300,
+                            key_frame_interval=100)
     else:
         pattern_test_suit = make_default_pattern_test_suit()
-        run_pattern_tests(pattern_test_suit, force=args.force_delete_outputs)
+        run_pattern_tests(pattern_test_suit,
+                          force=args.force_delete_outputs,
+                          frames=300,
+                          key_frame_interval=100)
+
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())

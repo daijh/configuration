@@ -1,4 +1,4 @@
-#!/usr/bin/python3 -E
+#!/usr/bin/python3 -u
 
 import sys
 import os
