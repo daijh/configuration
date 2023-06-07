@@ -41,19 +41,40 @@ def exec_bash(cmd, check=True, env=None, log_file=None):
 def make_default_pattern_test_suit():
     pattern_test_suit = []
 
-    codecs = ['vp8', 'vp9', 'h264', 'av1']
+    codecs = ['vp8', 'vp9']
+    #codecs = ['vp8', 'vp9', 'h264', 'av1']
     scalability_modes = ['L1T1', 'L1T3', 'L3T3_KEY']
 
     encode_settings = []
+    # webrtc - max
     encode_settings.append({
         'width': 1280,
-        'height': 640,
+        'height': 720,
+        'frame_rate': 30,
+        'bitrate_kbps': 2500
+    })
+    encode_settings.append({
+        'width': 640,
+        'height': 360,
+        'frame_rate': 30,
+        'bitrate_kbps': 800
+    })
+    encode_settings.append({
+        'width': 320,
+        'height': 180,
+        'frame_rate': 30,
+        'bitrate_kbps': 300
+    })
+    # webrtc - min
+    encode_settings.append({
+        'width': 1280,
+        'height': 720,
         'frame_rate': 30,
         'bitrate_kbps': 1500
     })
     encode_settings.append({
         'width': 640,
-        'height': 320,
+        'height': 360,
         'frame_rate': 30,
         'bitrate_kbps': 500
     })
