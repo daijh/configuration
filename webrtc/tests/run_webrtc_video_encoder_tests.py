@@ -30,7 +30,6 @@ def exec_bash(cmd, check=True, env=None, log_file=None):
         result = subprocess.run(cmd.split(), check=check, env=env)
 
     result.stdout = None
-
     print(result)
     return result
 
@@ -109,12 +108,12 @@ def run_pattern_tests(pattern_test_suit,
                       frames=300,
                       key_frame_interval=100):
     output_dir = global_pwd.joinpath(f'video_encoder_tests-pattern')
-    if (output_dir.exists()):
-        if (force):
+    if output_dir.exists():
+        if force:
             shutil.rmtree(str(output_dir))
         else:
-            print(f'Error, output dir allready exists, {output_dir}')
-            sys.exit(1)
+            raise RuntimeError(
+                f'Error, output dir allready exists, {output_dir}')
 
     for pattern_test in pattern_test_suit:
         pattern = pattern_test['pattern']
@@ -205,12 +204,12 @@ def run_ivf_input_tests(ivf_test_suit,
                         frames=300,
                         key_frame_interval=100):
     output_dir = global_pwd.joinpath(f'video_encoder_tests-ivf')
-    if (output_dir.exists()):
-        if (force):
+    if output_dir.exists():
+        if force:
             shutil.rmtree(str(output_dir))
         else:
-            print(f'Error, output dir allready exists, {output_dir}')
-            sys.exit(1)
+            raise RuntimeError(
+                f'Error, output dir allready exists, {output_dir}')
 
     for ivf_test in ivf_test_suit:
         ivf_input = ivf_test['ivf_input']
@@ -219,9 +218,8 @@ def run_ivf_input_tests(ivf_test_suit,
 
         # check input exists
         ivf_path = pathlib.Path(ivf_input).resolve()
-        if (not ivf_path.exists()):
-            print(f'ivf input dose not exist, {ivf_input}')
-            sys.exit(1)
+        if not ivf_path.exists():
+            raise RuntimeError(f'ivf input dose not exist, {ivf_input}')
 
         # pattern dir
         pattern_dir_path = output_dir.joinpath(f'{ivf_path.name}')
