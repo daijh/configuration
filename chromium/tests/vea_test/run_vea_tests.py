@@ -1,4 +1,4 @@
-#!/usr/bin/python3 -E
+#!/usr/bin/python3 -u
 
 import sys
 import os
@@ -9,16 +9,14 @@ import argparse
 import shutil
 
 # pwd
-PWD = pathlib.Path().resolve()
+global_pwd = pathlib.Path().resolve()
 
-# executatble prefix
-ROOT = PWD
 
 def exec_bash(cmd, check=True, env=None, log_file=None):
-    print(cmd)
+    print(f'{cmd}\n')
 
     if log_file:
-        print(f'Write log: {log_file}')
+        print(f'Write log: {log_file}\n')
 
         result = subprocess.run(cmd.split(),
                                 check=check,
@@ -32,8 +30,7 @@ def exec_bash(cmd, check=True, env=None, log_file=None):
         result = subprocess.run(cmd.split(), check=check, env=env)
 
     result.stdout = None
-
-    #print(result)
+    print(result)
     return result
 
 
@@ -87,13 +84,13 @@ def make_vea_test_suite():
 
 
 def run_vea_tests(vea_test_suite, force=None):
-    output_dir = PWD.joinpath(f'vea_encoder_tests')
-    if (output_dir.exists()):
-        if (force):
+    output_dir = global_pwd.joinpath(f'vea_encoder_tests')
+    if output_dir.exists():
+        if force:
             shutil.rmtree(str(output_dir))
         else:
-            print(f'Error, output dir allready exists, {output_dir}')
-            sys.exit(1)
+            raise RuntimeError(
+                f'Error, output dir allready exists, {output_dir}')
 
     for vea_test in vea_test_suite:
         input_file = vea_test['input']
@@ -102,9 +99,8 @@ def run_vea_tests(vea_test_suite, force=None):
 
         # check input exists
         input_path = pathlib.Path(input_file).resolve()
-        if (not input_path.exists()):
-            print(f'input dose not exist, {input_file}')
-            sys.exit(1)
+        if not input_path.exists():
+            raise RuntimeError(f'ivf input dose not exist, {ivf_input}')
 
         # pattern dir
         pattern_dir_path = output_dir.joinpath(f'{input_path.name}')
@@ -125,11 +121,16 @@ def run_vea_tests(vea_test_suite, force=None):
                     output_path = test_dir.joinpath(f'{codec_mode_name}')
                     log_file = test_dir.joinpath(f'{codec_mode_name}.log')
 
-                    print(f'+++Run Case')
-                    print(f'')
+                    print(f'\n+++Run Case\n')
 
                     output_path.mkdir(parents=True, exist_ok=False)
                     os.chdir(str(output_path))
+
+                    '''
+                            f'--svc_mode=L{scalability_mode["spatials"]}T{scalability_mode["temporals"]} ' \
+                            f'--num_spatial_layers={scalability_mode["spatials"]} ' \
+                            f'--num_temporal_layers={scalability_mode["temporals"]} ' \
+                    '''
 
                     cmd = f'video_encode_accelerator_tests ' \
                             f'{str(input_path)} ' \
@@ -140,18 +141,16 @@ def run_vea_tests(vea_test_suite, force=None):
                             f'--output_bitstream ' \
                             f'--gtest_filter=VideoEncoderTest.FlushAtEndOfStream ' \
                             f'--vmodule=*/media/gpu/*=4 ' \
-                            f'--output_folder={str(output_path)} ' \
+                            f'--output_folder={str(output_path)} '
 
                     exec_bash(cmd,
                               check=False,
                               log_file=str(log_file.resolve()))
 
-                    print(f'')
-
     return
 
 
-if __name__ == '__main__':
+def main() -> int:
     parser = argparse.ArgumentParser(allow_abbrev=False)
     parser.add_argument('-r',
                         '--root',
@@ -171,19 +170,21 @@ if __name__ == '__main__':
                         help="Run vp9 svc tests")
     args = parser.parse_args()
 
+    root = pathlib.Path().resolve()
     if args.root:
-        ROOT = pathlib.Path(args.root).resolve()
+        root = pathlib.Path(args.root).resolve()
+    print(f'Set root, {root}')
 
-        print(f'Set ROOT, {ROOT}')
-
-    # Set env
-    # Chromium
-    PREFIX = ROOT.joinpath(f'src/out/Default')
+    # Set chromium prefix to env
+    chromium_prefix = root.joinpath('src/out/Default')
 
     my_env = os.environ
     if not 'PATH' in my_env:
         my_env['PATH'] = ''
-    my_env['PATH'] = f"{str(PREFIX)}:{my_env['PATH']}"
+    my_env['PATH'] = f"{str(chromium_prefix)}:{my_env['PATH']}"
 
     vea_test_suite = make_vea_test_suite()
     run_vea_tests(vea_test_suite, force=args.force_delete_outputs)
+
+if __name__ == '__main__':
+    sys.exit(main())
