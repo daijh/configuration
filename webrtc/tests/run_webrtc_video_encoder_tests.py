@@ -142,9 +142,9 @@ def run_pattern_tests(pattern_test_suit,
 
                     print(f'\n+++Run Case\n')
 
-                    cmd = f'video_encoder --video_codec={codec} --scalability_mode={scalability_mode} ' \
+                    cmd = f'video_encoder --verbose --video_codec={codec} --scalability_mode={scalability_mode} ' \
                             f'--width={encode_setting["width"]} --height={encode_setting["height"]} ' \
-                            f'--frame_rate={encode_setting["frame_rate"]} --bitrate_kbps={encode_setting["bitrate_kbps"]} ' \
+                            f'--frame_rate_fps={encode_setting["frame_rate"]} --bitrate_kbps={encode_setting["bitrate_kbps"]} ' \
                             f'--raw_frame_generator={pattern} --frames={frames} --key_frame_interval={key_frame_interval} '
                     exec_bash(cmd,
                               check=False,
@@ -243,9 +243,9 @@ def run_ivf_input_tests(ivf_test_suit,
 
                     print(f'\n+++Run Case\n')
 
-                    cmd = f'video_encoder --video_codec={codec} --scalability_mode={scalability_mode} ' \
+                    cmd = f'video_encoder --verbose --video_codec={codec} --scalability_mode={scalability_mode} ' \
                             f'--width={encode_setting["width"]} --height={encode_setting["height"]} ' \
-                            f'--frame_rate={encode_setting["frame_rate"]} --bitrate_kbps={encode_setting["bitrate_kbps"]} ' \
+                            f'--frame_rate_fps={encode_setting["frame_rate"]} --bitrate_kbps={encode_setting["bitrate_kbps"]} ' \
                             f'--ivf_input_file={str(ivf_path)} --frames={frames} --key_frame_interval={key_frame_interval} '
                     exec_bash(cmd,
                               check=False,
