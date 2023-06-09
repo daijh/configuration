@@ -10,31 +10,13 @@ import shutil
 import csv
 from operator import itemgetter, attrgetter
 
+# local modules
+import pm_shell
+import pm_video
+from pm_shell import exec_bash as exec_bash
+
 # pwd
 global_pwd = pathlib.Path().resolve()
-
-
-def exec_bash(cmd, check=True, env=None, log_file=None):
-    print(f'{cmd}\n')
-
-    if log_file:
-        print(f'Write log: {log_file}\n')
-
-        result = subprocess.run(cmd.split(),
-                                check=check,
-                                env=env,
-                                stdout=subprocess.PIPE,
-                                stderr=subprocess.STDOUT,
-                                text=True)
-        with open(log_file, 'w', encoding="utf-8") as f:
-            f.write(result.stdout)
-    else:
-        result = subprocess.run(cmd.split(), check=check, env=env)
-
-    result.stdout = None
-
-    print(result)
-    return result
 
 
 def parse_results(input_dir) -> int:
@@ -48,6 +30,9 @@ def parse_results(input_dir) -> int:
     files = input_dir.glob('**/*.ivf')
     for file in files:
         result = {}
+
+        trace_header_file = file.parent.joinpath(f'{file.name}.trace_header')
+        pm_video.trace_header(file, trace_header_file)
 
         # vp9-L1T1
         codec_scalability_mode = file.parent.parent.parent.name
@@ -63,9 +48,19 @@ def parse_results(input_dir) -> int:
         result['ivf_file'] = file.name
         result['size'] = file.stat().st_size
 
+        m = re.match(r".*framerate(?P<frame_rate>[0-9]+).*",
+                     result['encode_settings'])
+        if not m:
+            raise RuntimeError(f"invalid {result['encode_settings']}")
+        frame_rate = int(m.group('frame_rate'))
+
+        result['frames'] = int(pm_video.video_frames(trace_header_file))
+        result['bitrate'] = 8 * frame_rate * result['size'] / result['frames']
+
         result[
             'test_suite'] = file.parent.parent.parent.parent.parent.parent.name
 
+        print(result)
         results.append(result)
 
     sorted_results = sorted(results,
@@ -82,6 +77,7 @@ def parse_results(input_dir) -> int:
         # parse test_suite and value
         values_dict = {}
         test_suites = set()
+        test_suites_item_names = ['size', 'frames', 'bitrate']
         for r in sorted_results:
             # retrieve test_suite
             test_suites.add(r['test_suite'])
@@ -90,7 +86,11 @@ def parse_results(input_dir) -> int:
             key = f"{r['input']} {r['codec']} {r['encode_settings']} {r['scalability_mode']} {r['ivf_file']}"
             if not key in values_dict:
                 values_dict[key] = {}
-            values_dict[key][r['test_suite']] = r['size']
+            values_dict[key][r['test_suite']] = {
+                'size': r['size'],
+                'frames': r['frames'],
+                'bitrate': r['bitrate']
+            }
 
         test_suites = sorted(test_suites)
 
@@ -100,7 +100,11 @@ def parse_results(input_dir) -> int:
             'Name'
         ]
         for test_suit in test_suites:
-            fieldnames.append(test_suit)
+            for name in test_suites_item_names[:1]:
+                fieldnames.append(f'{test_suit}-{name}')
+            for name in test_suites_item_names[1:]:
+                fieldnames.append(f'{name}')
+
         writer.writerow(fieldnames)
 
         print(f'header: {fieldnames}')
@@ -119,8 +123,7 @@ def parse_results(input_dir) -> int:
             row = key.split()
             # retrieve value
             for test_suite in test_suites:
-                row.append(values_dict[key][test_suite])
-
+                row += values_dict[key][test_suite].values()
             rows.append(row)
 
         # delete duplicate

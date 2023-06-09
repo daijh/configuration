@@ -8,30 +8,12 @@ import subprocess
 import argparse
 import shutil
 
+# local modules
+import pm_shell
+from pm_shell import exec_bash as exec_bash
+
 # pwd
 global_pwd = pathlib.Path().resolve()
-
-
-def exec_bash(cmd, check=True, env=None, log_file=None):
-    print(f'{cmd}\n')
-
-    if log_file:
-        print(f'Write log: {log_file}\n')
-
-        result = subprocess.run(cmd.split(),
-                                check=check,
-                                env=env,
-                                stdout=subprocess.PIPE,
-                                stderr=subprocess.STDOUT,
-                                text=True)
-        with open(log_file, 'w', encoding="utf-8") as f:
-            f.write(result.stdout)
-    else:
-        result = subprocess.run(cmd.split(), check=check, env=env)
-
-    result.stdout = None
-    print(result)
-    return result
 
 
 def make_vea_test_suite():
@@ -125,7 +107,6 @@ def run_vea_tests(vea_test_suite, force=None):
 
                     output_path.mkdir(parents=True, exist_ok=False)
                     os.chdir(str(output_path))
-
                     '''
                             f'--svc_mode=L{scalability_mode["spatials"]}T{scalability_mode["temporals"]} ' \
                             f'--num_spatial_layers={scalability_mode["spatials"]} ' \
@@ -180,14 +161,11 @@ def main() -> int:
 
     # Set chromium prefix to env
     chromium_prefix = root.joinpath('src/out/Default')
-
-    my_env = os.environ
-    if not 'PATH' in my_env:
-        my_env['PATH'] = ''
-    my_env['PATH'] = f"{str(chromium_prefix)}:{my_env['PATH']}"
+    pm_shell.set_env('PATH', chromium_prefix)
 
     vea_test_suite = make_vea_test_suite()
     run_vea_tests(vea_test_suite, force=args.force_delete_outputs)
+
 
 if __name__ == '__main__':
     sys.exit(main())
