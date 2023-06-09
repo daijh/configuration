@@ -14,7 +14,7 @@ from pm_shell import exec_bash as exec_bash
 
 def trace_header(input, output):
     cmd = f'ffmpeg -i {input} -vcodec copy -bsf:v trace_headers -f null - '
-    exec_bash(cmd, log_file=output)
+    exec_bash(cmd, log_file=output, check=False)
 
     return
 

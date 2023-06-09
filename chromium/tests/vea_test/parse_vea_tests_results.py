@@ -48,6 +48,7 @@ def parse_results(input_dir) -> int:
         result['ivf_file'] = file.name
         result['size'] = file.stat().st_size
 
+        # bitrate
         m = re.match(r".*framerate(?P<frame_rate>[0-9]+).*",
                      result['encode_settings'])
         if not m:
