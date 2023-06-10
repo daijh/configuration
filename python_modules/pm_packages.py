@@ -47,20 +47,17 @@ def clone_git_repo(url, git_revision, dst, clean=None):
     return
 
 
-def autogen_build(dst, prefix=None, configure=''):
+def autogen_build(dst, configure=''):
     if not dst.exists():
         raise RuntimeError(f'{dst} not existed')
-
-    if not prefix:
-        raise RuntimeError(f'{prefix} is None')
 
     cwd = os.getcwd()
     os.chdir(str(dst))
 
-    cmd = f'./autogen.sh --prefix={prefix} {configure}'
+    cmd = f'./autogen.sh {configure}'
     exec_bash(cmd)
 
-    cmd = f'make -j'
+    cmd = f'make -j 8'
     exec_bash(cmd)
 
     cmd = f'make install'
@@ -70,20 +67,17 @@ def autogen_build(dst, prefix=None, configure=''):
     return
 
 
-def configure_build(dst, prefix=None, configure=''):
+def configure_build(dst, configure=''):
     if not dst.exists():
         raise RuntimeError(f'{dst} not existed')
-
-    if not prefix:
-        raise RuntimeError(f'{prefix} is None!')
 
     cwd = os.getcwd()
     os.chdir(str(dst))
 
-    cmd = f'./configure --prefix={prefix} {configure}'
+    cmd = f'./configure {configure}'
     exec_bash(cmd)
 
-    cmd = f'make -j'
+    cmd = f'make -j 8'
     exec_bash(cmd)
 
     cmd = f'make install'
@@ -93,12 +87,9 @@ def configure_build(dst, prefix=None, configure=''):
     return
 
 
-def cmake_build(dst, prefix=None, configure='', install_opts=''):
+def cmake_build(dst, configure='', install_opts=''):
     if not dst.exists():
         raise RuntimeError(f'{dst} not existed')
-
-    if not prefix:
-        raise RuntimeError(f'{prefix} is None!')
 
     cwd = os.getcwd()
 
@@ -110,10 +101,10 @@ def cmake_build(dst, prefix=None, configure='', install_opts=''):
     cmake_dir.mkdir(exist_ok=True)
     os.chdir(str(cmake_dir))
 
-    cmd = f'cmake -DCMAKE_INSTALL_PREFIX={prefix} {configure} ..'
+    cmd = f'cmake {configure} ..'
     exec_bash(cmd)
 
-    cmd = f'make -j'
+    cmd = f'make -j 8'
     exec_bash(cmd)
 
     cmd = f'make {install_opts} install'

@@ -36,3 +36,6 @@ def set_env(env_name, env_value):
     if not env_name in my_env:
         my_env[env_name] = ''
     my_env[env_name] = f'{(env_value)}:{my_env[env_name]}'
+
+    print(f'Set {env_name}, {env_value}')
+
