@@ -15,9 +15,6 @@ import pm_shell
 import pm_video
 from pm_shell import exec_bash as exec_bash
 
-# pwd
-global_pwd = pathlib.Path().resolve()
-
 
 def parse_results(input_dir) -> int:
     if not input_dir.exists():
@@ -73,7 +70,8 @@ def parse_results(input_dir) -> int:
 
         result['bitrate_kbps'] = 0
         if result['frames']:
-            result['bitrate_kbps'] = int(8 * frame_rate * result['size'] / result['frames'] / 1000)
+            result['bitrate_kbps'] = int(8 * frame_rate * result['size'] /
+                                         result['frames'] / 1000)
 
         print(result)
         results.append(result)

@@ -13,12 +13,9 @@ import pm_shell
 import pm_video
 from pm_shell import exec_bash as exec_bash
 
-# pwd
-global_pwd = pathlib.Path().resolve()
-
 
 def make_test_suite(include_pattern_tests=True, include_ivf_tests=True):
-    pattern_test_suite = []
+    test_suite = []
 
     #codecs = ['vp8', 'vp9', 'h264', 'av1']
     codecs = ['vp8', 'vp9']
@@ -73,7 +70,7 @@ def make_test_suite(include_pattern_tests=True, include_ivf_tests=True):
         pattern_test['scalability_modes'] = scalability_modes
         pattern_test['encode_settings'] = encode_settings
 
-        pattern_test_suite.append(pattern_test)
+        test_suite.append(pattern_test)
 
         # pattern case
         pattern_test = {}
@@ -82,7 +79,7 @@ def make_test_suite(include_pattern_tests=True, include_ivf_tests=True):
         pattern_test['scalability_modes'] = scalability_modes
         pattern_test['encode_settings'] = encode_settings
 
-        pattern_test_suite.append(pattern_test)
+        test_suite.append(pattern_test)
 
     if include_ivf_tests:
         # ivf case
@@ -97,7 +94,7 @@ def make_test_suite(include_pattern_tests=True, include_ivf_tests=True):
         pattern_test['scalability_modes'] = scalability_modes
         pattern_test['encode_settings'] = encode_settings
 
-        pattern_test_suite.append(pattern_test)
+        test_suite.append(pattern_test)
 
         # ivf case
         ivf_dir = pathlib.Path(
@@ -111,19 +108,20 @@ def make_test_suite(include_pattern_tests=True, include_ivf_tests=True):
         pattern_test['scalability_modes'] = scalability_modes
         pattern_test['encode_settings'] = encode_settings
 
-        pattern_test_suite.append(pattern_test)
+        test_suite.append(pattern_test)
 
     # return all test cases
-    for p in pattern_test_suite:
+    for p in test_suite:
         print(p)
-    return pattern_test_suite
+    return test_suite
 
 
-def run_tests(pattern_test_suite,
+def run_tests(test_suite,
               force=None,
               frames=300,
-              key_frame_interval=100):
-    output_dir = global_pwd.joinpath(f'video_encoder_tests')
+              key_frame_interval=100,
+              pwd=pathlib.Path().resolve()):
+    output_dir = pwd.joinpath(f'video_encoder_tests')
     if output_dir.exists():
         if force:
             shutil.rmtree(str(output_dir))
@@ -131,23 +129,22 @@ def run_tests(pattern_test_suite,
             raise RuntimeError(
                 f'Error, output dir allready exists, {output_dir}')
 
-    for pattern_test in pattern_test_suite:
-        codecs = pattern_test['codecs']
-        scalability_modes = pattern_test['scalability_modes']
+    for test_case in test_suite:
+        codecs = test_case['codecs']
+        scalability_modes = test_case['scalability_modes']
 
         # pattern dir
-        if 'pattern' in pattern_test:
+        if 'pattern' in test_case:
             pattern_dir_path = output_dir.joinpath(
-                f"pattern{pattern_test['pattern']}")
+                f"pattern{test_case['pattern']}")
             pattern_dir_path.mkdir(parents=True, exist_ok=False)
-        elif 'ivf' in pattern_test:
-            pattern_dir_path = output_dir.joinpath(
-                f"{pattern_test['ivf'].name}")
+        elif 'ivf' in test_case:
+            pattern_dir_path = output_dir.joinpath(f"{test_case['ivf'].name}")
             pattern_dir_path.mkdir(parents=True, exist_ok=False)
         else:
-            raise RuntimeError(f'Invalid {pattern_test}')
+            raise RuntimeError(f'Invalid {test_case}')
 
-        for encode_setting in pattern_test['encode_settings']:
+        for encode_setting in test_case['encode_settings']:
             # test dir
             test_name = f'{encode_setting["width"]}x{encode_setting["height"]}-framerate{encode_setting["frame_rate"]}-bitrate{encode_setting["bitrate_kbps"]}'
             test_dir = pattern_dir_path.joinpath(test_name)
@@ -170,12 +167,12 @@ def run_tests(pattern_test_suite,
                             f'--frame_rate_fps={encode_setting["frame_rate"]} --bitrate_kbps={encode_setting["bitrate_kbps"]} ' \
                             f'--key_frame_interval={key_frame_interval} --frames={frames} '
 
-                    if 'pattern' in pattern_test:
-                        cmd += f"--raw_frame_generator={pattern_test['pattern']} "
-                    elif 'ivf' in pattern_test:
-                        cmd += f"--ivf_input_file={pattern_test['ivf'] }"
+                    if 'pattern' in test_case:
+                        cmd += f"--raw_frame_generator={test_case['pattern']} "
+                    elif 'ivf' in test_case:
+                        cmd += f"--ivf_input_file={test_case['ivf'] }"
                     else:
-                        raise RuntimeError(f'Invalid {pattern_test}')
+                        raise RuntimeError(f'Invalid {test_case}')
 
                     exec_bash(cmd,
                               check=False,
