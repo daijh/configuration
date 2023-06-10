@@ -50,11 +50,13 @@ def parse_results(input_dir) -> int:
         result['layer'] = m.group('layer')
 
         test_suite = f'{file.parent.parent.parent.name}'
+        '''
         m = re.match(r"video_encoder_tests(?P<test_suite>.*)", test_suite)
         if not m:
             raise RuntimeError(f'invalid {test_suite}')
+        '''
 
-        result['test_suite'] = m.group('test_suite')
+        result['test_suite'] = test_suite
         result['test_case'] = file.parent.parent.name
 
         result['encode_settings'] = file.parent.name
@@ -114,9 +116,9 @@ def parse_results(input_dir) -> int:
             'Test Case', 'Video Codec', 'Encode Settings', 'Scalability Mode',
             'Layer', 'Name'
         ]
-        for test_suit in test_suites:
+        for test_suite in test_suites:
             for name in test_suites_item_names[:1]:
-                fieldnames.append(f'{test_suit}-{name}')
+                fieldnames.append(f'{test_suite}-{name}')
             for name in test_suites_item_names[1:]:
                 fieldnames.append(f'{name}')
         writer.writerow(fieldnames)
