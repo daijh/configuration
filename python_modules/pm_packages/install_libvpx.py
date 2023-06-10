@@ -33,7 +33,7 @@ def install_deps():
 
 
 def build_libvpx(dst, prefix):
-    configure = '--prefix={prefix} --enable-vp8 --enable-vp9 --enable-vp9-highbitdepth --enable-pic --enable-shared --disable-static'
+    configure = f'--prefix={prefix} --enable-vp8 --enable-vp9 --enable-vp9-highbitdepth --enable-pic --enable-shared --disable-static'
     pm_packages.configure_build(dst, configure)
 
     return
