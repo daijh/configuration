@@ -11,63 +11,57 @@ import shutil
 # local modules
 import pm_shell
 import pm_packages
-
 from pm_shell import exec_bash as exec_bash
 
-global_pwd = pathlib.Path().resolve()
 
-global_build = global_pwd.joinpath('third_party')
-global_prefix = global_pwd.joinpath('out')
-
-
-def install_libva(version=None):
+def install_libva(source_dir, prefix, version):
     name = 'libva'
     url = f'git@github.com:intel/{name}.git'
 
-    dst = global_build.joinpath(name)
+    dst = source_dir.joinpath(name)
     pm_packages.clone_git_repo(url, version, dst, None)
 
-    configure = f'--prefix={global_prefix}'
+    configure = f'--prefix={prefix}'
     pm_packages.autogen_build(dst, configure)
 
     return
 
 
-def install_libva_utils(version=None):
+def install_libva_utils(source_dir, prefix, version):
     name = 'libva-utils'
     url = f'git@github.com:intel/{name}.git'
 
-    dst = global_build.joinpath(name)
+    dst = source_dir.joinpath(name)
     pm_packages.clone_git_repo(url, version, dst, None)
 
     # --disable-x11
-    configure = '--prefix={global_prefix} --disable-wayland'
+    configure = '--prefix={prefix} --disable-wayland'
     pm_packages.autogen_build(dst, configure)
 
     return
 
 
-def install_gmmlib(version=None):
+def install_gmmlib(source_dir, prefix, version):
     name = 'gmmlib'
     url = f'git@github.com:intel/{name}.git'
 
-    dst = global_build.joinpath(name)
+    dst = source_dir.joinpath(name)
     pm_packages.clone_git_repo(url, version, dst, None)
 
-    configure = f'-DCMAKE_INSTALL_PREFIX={global_prefix} -DBUILD_TYPE=debug'
+    configure = f'-DCMAKE_INSTALL_PREFIX={prefix} -DBUILD_TYPE=debug'
     pm_packages.cmake_build(dst, configure)
 
     return
 
 
-def install_iHD_driver(version=None, non_free=True):
+def install_iHD_driver(source_dir, prefix, version, non_free=True):
     name = 'media-driver'
     url = f'git@github.com:intel/{name}.git'
 
-    dst = global_build.joinpath(name)
+    dst = source_dir.joinpath(name)
     pm_packages.clone_git_repo(url, version, dst, None)
 
-    configure = f'-DCMAKE_INSTALL_PREFIX={global_prefix} -DBUILD_TYPE=debug'
+    configure = f'-DCMAKE_INSTALL_PREFIX={prefix} -DBUILD_TYPE=debug'
     if non_free:
         configure += f' -DENABLE_KERNELS=ON -DENABLE_NONFREE_KERNELS=ON'
     else:
@@ -85,21 +79,37 @@ def main() -> int:
                         action='store',
                         default=None,
                         help="Set root install path")
+    parser.add_argument('-d',
+                        '--deps',
+                        dest='install_deps',
+                        action='store_true',
+                        default=False,
+                        help="Install all deps")
     args = parser.parse_args()
 
-    # install deps
-    pm_packages.install_deps()
+    # set pwd
+    pwd = pathlib.Path().resolve()
+    if args.root:
+        pwd = pathlib.Path(args.root).resolve()
+    print(f'Set PWD, {pwd}')
+
+    source_dir = pwd.joinpath('third_party')
+    prefix = pwd.joinpath('out')
 
     # Set pkg_config_path to env
-    pkg_config_path = global_prefix.joinpath('lib/pkgconfig')
+    pkg_config_path = prefix.joinpath('lib/pkgconfig')
     pm_shell.set_env('PKG_CONFIG_PATH', pkg_config_path)
 
+    # install deps
+    if args.install_deps:
+        install_deps()
+
     # build
-    install_libva('2.18.0')
-    #install_libva_utils('2.18.0')
-    install_gmmlib('intel-gmmlib-22.3.5')
-    install_iHD_driver('master')
-    #install_iHD_driver('intel-media-23.1.6')
+    install_libva(source_dir, prefix, '2.18.0')
+    #install_libva_utils(source_dir, prefix, '2.18.0')
+    install_gmmlib(source_dir, prefix, 'intel-gmmlib-22.3.5')
+    install_iHD_driver(source_dir, prefix, 'master')
+    #install_iHD_driver(source_dir, prefix,'intel-media-23.1.6')
 
 
 if __name__ == '__main__':

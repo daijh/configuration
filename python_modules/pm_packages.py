@@ -86,7 +86,7 @@ def configure_build(dst, configure=''):
     os.chdir(cwd)
     return
 
-
+#-DCMAKE_INSTALL_PREFIX={prefix}
 def cmake_build(dst, configure='', install_opts=''):
     if not dst.exists():
         raise RuntimeError(f'{dst} not existed')
