@@ -12,7 +12,7 @@ import shutil
 import pm_shell
 import pm_packages
 
-from pm_shell import exec_bash as exec_bash 
+from pm_shell import exec_bash as exec_bash
 
 global_pwd = pathlib.Path().resolve()
 
@@ -27,8 +27,8 @@ def install_libva(version=None):
     dst = global_build.joinpath(name)
     pm_packages.clone_git_repo(url, version, dst, None)
 
-    configure = ''
-    pm_packages.autogen_build(dst, global_prefix, configure)
+    configure = f'--prefix={global_prefix}'
+    pm_packages.autogen_build(dst, configure)
 
     return
 
@@ -41,8 +41,8 @@ def install_libva_utils(version=None):
     pm_packages.clone_git_repo(url, version, dst, None)
 
     # --disable-x11
-    configure = '--disable-wayland'
-    pm_packages.autogen_build(dst, global_prefix, configure)
+    configure = '--prefix={global_prefix} --disable-wayland'
+    pm_packages.autogen_build(dst, configure)
 
     return
 
@@ -54,6 +54,9 @@ def install_gmmlib(version=None):
     dst = global_build.joinpath(name)
     pm_packages.clone_git_repo(url, version, dst, None)
 
+    configure = f'-DCMAKE_INSTALL_PREFIX={global_prefix} -DBUILD_TYPE=debug'
+    pm_packages.cmake_build(dst, configure)
+
     return
 
 
@@ -63,6 +66,13 @@ def install_iHD_driver(version=None, non_free=True):
 
     dst = global_build.joinpath(name)
     pm_packages.clone_git_repo(url, version, dst, None)
+
+    configure = f'-DCMAKE_INSTALL_PREFIX={global_prefix} -DBUILD_TYPE=debug'
+    if non_free:
+        configure += f' -DENABLE_KERNELS=ON -DENABLE_NONFREE_KERNELS=ON'
+    else:
+        configure += f' -DENABLE_KERNELS=ON -DENABLE_NONFREE_KERNELS=OFF'
+    pm_packages.cmake_build(dst, configure)
 
     return
 
@@ -80,15 +90,13 @@ def main() -> int:
     # install deps
     pm_packages.install_deps()
 
-    # build
-    my_env = os.environ
-    if not 'PKG_CONFIG_PATH' in my_env:
-        my_env['PKG_CONFIG_PATH'] = ''
-    my_env[
-        'PKG_CONFIG_PATH'] = f"{str(global_prefix)}/lib/pkgconfig:{my_env['PKG_CONFIG_PATH']}"
+    # Set pkg_config_path to env
+    pkg_config_path = global_prefix.joinpath('lib/pkgconfig')
+    pm_shell.set_env('PKG_CONFIG_PATH', pkg_config_path)
 
+    # build
     install_libva('2.18.0')
-    install_libva_utils('2.18.0')
+    #install_libva_utils('2.18.0')
     install_gmmlib('intel-gmmlib-22.3.5')
     install_iHD_driver('master')
     #install_iHD_driver('intel-media-23.1.6')
