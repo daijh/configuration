@@ -1,1 +1,3 @@
 workspace
+python_modules/__pycache__
+python_modules/pm_packages/__pycache__
