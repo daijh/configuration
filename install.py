@@ -34,7 +34,7 @@ def install_deps():
         #packages += f'lm-sensors cpuid cpuinfo hwloc '
 
         cmd = f'sudo -E apt install -y ' + packages
-        exec_bash(cmd)
+        exec_bash(cmd, check=False)
     else:
         raise RuntimeError(f'Unsupported OS {os_release}')
 
@@ -120,27 +120,53 @@ def main() -> int:
                         action='store',
                         default=None,
                         help="Set root install path")
+    parser.add_argument('-a',
+                        '--all',
+                        dest='install_all',
+                        action='store_true',
+                        default=False,
+                        help="Install all")
     parser.add_argument('-d',
                         '--deps',
                         dest='install_deps',
                         action='store_true',
                         default=False,
                         help="Install all deps")
+    parser.add_argument('--vim',
+                        dest='install_vim',
+                        action='store_true',
+                        default=False,
+                        help="Install vim config")
+    parser.add_argument('--git',
+                        dest='install_git',
+                        action='store_true',
+                        default=False,
+                        help="Install git config")
+    parser.add_argument('--tmux',
+                        dest='install_tmux',
+                        action='store_true',
+                        default=False,
+                        help="Install tmux config")
     args = parser.parse_args()
 
     # set pwd
     pwd = pathlib.Path().resolve()
     if args.root:
         pwd = pathlib.Path(args.root).resolve()
-    print(f'Set PWD, {pwd}')
+    print(f'Set dst, {pwd}')
 
     # install deps
-    if args.install_deps:
+    if args.install_deps or args.install_all:
         install_deps()
 
-    install_git_configure(pwd)
-    install_tmux_configure(pwd)
-    install_vim_configure(pwd)
+    if args.install_git or args.install_all:
+        install_git_configure(pwd)
+
+    if args.install_tmux or args.install_all:
+        install_tmux_configure(pwd)
+
+    if args.install_vim or args.install_all:
+        install_vim_configure(pwd)
 
     print('Done')
     return 0
