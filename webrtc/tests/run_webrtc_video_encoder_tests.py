@@ -8,38 +8,22 @@ import subprocess
 import argparse
 import shutil
 
+# local modules
+import pm_shell
+import pm_video
+from pm_shell import exec_bash as exec_bash
+
 # pwd
 global_pwd = pathlib.Path().resolve()
 
 
-def exec_bash(cmd, check=True, env=None, log_file=None):
-    print(f'{cmd}\n')
+def make_test_suite(include_pattern_tests=True, include_ivf_tests=True):
+    pattern_test_suite = []
 
-    if log_file:
-        print(f'Write log: {log_file}\n')
-
-        result = subprocess.run(cmd.split(),
-                                check=check,
-                                env=env,
-                                stdout=subprocess.PIPE,
-                                stderr=subprocess.STDOUT,
-                                text=True)
-        with open(log_file, 'w', encoding="utf-8") as f:
-            f.write(result.stdout)
-    else:
-        result = subprocess.run(cmd.split(), check=check, env=env)
-
-    result.stdout = None
-    print(result)
-    return result
-
-
-def make_default_pattern_test_suit():
-    pattern_test_suit = []
-
-    codecs = ['vp8', 'vp9']
     #codecs = ['vp8', 'vp9', 'h264', 'av1']
-    scalability_modes = ['L1T1', 'L1T3', 'L3T3_KEY']
+    codecs = ['vp8', 'vp9']
+    #scalability_modes = ['L1T1', 'L1T3', 'L3T3_KEY']
+    scalability_modes = ['L1T1', 'L1T3']
 
     encode_settings = []
     # webrtc - max
@@ -81,33 +65,65 @@ def make_default_pattern_test_suit():
         'bitrate_kbps': 150
     })
 
-    # case
-    pattern_test = {}
-    pattern_test['pattern'] = 0
-    pattern_test['codecs'] = codecs
-    pattern_test['scalability_modes'] = scalability_modes
-    pattern_test['encode_settings'] = encode_settings
+    if include_pattern_tests:
+        # pattern case
+        pattern_test = {}
+        pattern_test['pattern'] = 0
+        pattern_test['codecs'] = codecs
+        pattern_test['scalability_modes'] = scalability_modes
+        pattern_test['encode_settings'] = encode_settings
 
-    pattern_test_suit.append(pattern_test)
+        pattern_test_suite.append(pattern_test)
 
-    # case
-    pattern_test = {}
-    pattern_test['pattern'] = 1
-    pattern_test['codecs'] = codecs
-    pattern_test['scalability_modes'] = scalability_modes
-    pattern_test['encode_settings'] = encode_settings
+        # pattern case
+        pattern_test = {}
+        pattern_test['pattern'] = 1
+        pattern_test['codecs'] = codecs
+        pattern_test['scalability_modes'] = scalability_modes
+        pattern_test['encode_settings'] = encode_settings
 
-    pattern_test_suit.append(pattern_test)
+        pattern_test_suite.append(pattern_test)
+
+    if include_ivf_tests:
+        # ivf case
+        ivf_dir = pathlib.Path(
+            '/home/webrtc/third_party/test_streams/vp9_lossless_static'
+        ).resolve()
+        ivf_file = 'youtube_screenshot_static.ivf'
+
+        pattern_test = {}
+        pattern_test['ivf'] = ivf_dir.joinpath(ivf_file)
+        pattern_test['codecs'] = codecs
+        pattern_test['scalability_modes'] = scalability_modes
+        pattern_test['encode_settings'] = encode_settings
+
+        pattern_test_suite.append(pattern_test)
+
+        # ivf case
+        ivf_dir = pathlib.Path(
+            '/home/webrtc/third_party/test_streams/vp9_lossless_static'
+        ).resolve()
+        ivf_file = 'gipsrestat-320x180_static.vp9.ivf'
+
+        pattern_test = {}
+        pattern_test['ivf'] = ivf_dir.joinpath(ivf_file)
+        pattern_test['codecs'] = codecs
+        pattern_test['scalability_modes'] = scalability_modes
+        pattern_test['encode_settings'] = encode_settings
+
+        pattern_test_suite.append(pattern_test)
 
     # return all test cases
-    return pattern_test_suit
+    for p in pattern_test_suite:
+        print(p)
+    return pattern_test_suite
 
 
-def run_pattern_tests(pattern_test_suit,
-                      force=None,
-                      frames=300,
-                      key_frame_interval=100):
-    output_dir = global_pwd.joinpath(f'video_encoder_tests-pattern')
+def run_tests(pattern_test_suite,
+              force=None,
+              frames=300,
+              key_frame_interval=100):
+    output_dir = global_pwd.joinpath(f'video_encoder_tests')
     if output_dir.exists():
         if force:
             shutil.rmtree(str(output_dir))
@@ -115,14 +131,21 @@ def run_pattern_tests(pattern_test_suit,
             raise RuntimeError(
                 f'Error, output dir allready exists, {output_dir}')
 
-    for pattern_test in pattern_test_suit:
-        pattern = pattern_test['pattern']
+    for pattern_test in pattern_test_suite:
         codecs = pattern_test['codecs']
         scalability_modes = pattern_test['scalability_modes']
 
         # pattern dir
-        pattern_dir_path = output_dir.joinpath(f'pattern{pattern}')
-        pattern_dir_path.mkdir(parents=True, exist_ok=False)
+        if 'pattern' in pattern_test:
+            pattern_dir_path = output_dir.joinpath(
+                f"pattern{pattern_test['pattern']}")
+            pattern_dir_path.mkdir(parents=True, exist_ok=False)
+        elif 'ivf' in pattern_test:
+            pattern_dir_path = output_dir.joinpath(
+                f"{pattern_test['ivf'].name}")
+            pattern_dir_path.mkdir(parents=True, exist_ok=False)
+        else:
+            raise RuntimeError(f'Invalid {pattern_test}')
 
         for encode_setting in pattern_test['encode_settings']:
             # test dir
@@ -145,108 +168,15 @@ def run_pattern_tests(pattern_test_suit,
                     cmd = f'video_encoder --verbose --video_codec={codec} --scalability_mode={scalability_mode} ' \
                             f'--width={encode_setting["width"]} --height={encode_setting["height"]} ' \
                             f'--frame_rate_fps={encode_setting["frame_rate"]} --bitrate_kbps={encode_setting["bitrate_kbps"]} ' \
-                            f'--raw_frame_generator={pattern} --frames={frames} --key_frame_interval={key_frame_interval} '
-                    exec_bash(cmd,
-                              check=False,
-                              log_file=str(log_file.resolve()))
+                            f'--key_frame_interval={key_frame_interval} --frames={frames} '
 
-    return
+                    if 'pattern' in pattern_test:
+                        cmd += f"--raw_frame_generator={pattern_test['pattern']} "
+                    elif 'ivf' in pattern_test:
+                        cmd += f"--ivf_input_file={pattern_test['ivf'] }"
+                    else:
+                        raise RuntimeError(f'Invalid {pattern_test}')
 
-
-def make_ivf_test_suit():
-    ivf_input_test_suit = []
-
-    codecs = ['vp8', 'vp9', 'h264', 'av1']
-    scalability_modes = ['L1T1', 'L1T3', 'L3T3_KEY']
-
-    # case
-    ivf_input_test = {}
-    ivf_input_test[
-        'ivf_input'] = '/home/webrtc/third_party/test_streams/vp9_lossless_static/youtube_screenshot_static.ivf'
-    ivf_input_test['codecs'] = codecs
-    ivf_input_test['scalability_modes'] = scalability_modes
-
-    encode_settings = []
-    encode_settings.append({
-        'width': 1536,
-        'height': 748,
-        'frame_rate': 30,
-        'bitrate_kbps': 2250
-    })
-    ivf_input_test['encode_settings'] = encode_settings
-
-    ivf_input_test_suit.append(ivf_input_test)
-
-    # case
-    ivf_input_test = {}
-    ivf_input_test[
-        'ivf_input'] = '/home/webrtc/third_party/test_streams/vp9_lossless_static/gipsrestat-320x180_static.vp9.ivf'
-    ivf_input_test['codecs'] = codecs
-    ivf_input_test['scalability_modes'] = scalability_modes
-
-    encode_settings = []
-    encode_settings.append({
-        'width': 320,
-        'height': 180,
-        'frame_rate': 30,
-        'bitrate_kbps': 288
-    })
-    ivf_input_test['encode_settings'] = encode_settings
-
-    ivf_input_test_suit.append(ivf_input_test)
-
-    # return all test cases
-    return ivf_input_test_suit
-
-
-def run_ivf_input_tests(ivf_test_suit,
-                        force=None,
-                        frames=300,
-                        key_frame_interval=100):
-    output_dir = global_pwd.joinpath(f'video_encoder_tests-ivf')
-    if output_dir.exists():
-        if force:
-            shutil.rmtree(str(output_dir))
-        else:
-            raise RuntimeError(
-                f'Error, output dir allready exists, {output_dir}')
-
-    for ivf_test in ivf_test_suit:
-        ivf_input = ivf_test['ivf_input']
-        codecs = ivf_test['codecs']
-        scalability_modes = ivf_test['scalability_modes']
-
-        # check input exists
-        ivf_path = pathlib.Path(ivf_input).resolve()
-        if not ivf_path.exists():
-            raise RuntimeError(f'ivf input dose not exist, {ivf_input}')
-
-        # pattern dir
-        pattern_dir_path = output_dir.joinpath(f'{ivf_path.name}')
-        pattern_dir_path.mkdir(parents=True, exist_ok=False)
-
-        for encode_setting in ivf_test['encode_settings']:
-            # test dir
-            test_name = f'{encode_setting["width"]}x{encode_setting["height"]}-framerate{encode_setting["frame_rate"]}-bitrate{encode_setting["bitrate_kbps"]}'
-            test_dir = pattern_dir_path.joinpath(test_name)
-            test_dir.mkdir(parents=True, exist_ok=False)
-
-            os.chdir(str(test_dir))
-
-            for codec in codecs:
-                for scalability_mode in scalability_modes:
-                    log_dir = test_dir.joinpath(f'logs')
-                    log_dir.mkdir(parents=True, exist_ok=True)
-
-                    log_file = log_dir.joinpath(
-                        f'{codec}-{scalability_mode}.log')
-
-                    print(f'\n+++Run Case\n')
-
-                    cmd = f'video_encoder --verbose --video_codec={codec} --scalability_mode={scalability_mode} ' \
-                            f'--width={encode_setting["width"]} --height={encode_setting["height"]} ' \
-                            f'--frame_rate_fps={encode_setting["frame_rate"]} --bitrate_kbps={encode_setting["bitrate_kbps"]} ' \
-                            f'--ivf_input_file={str(ivf_path)} --frames={frames} --key_frame_interval={key_frame_interval} '
                     exec_bash(cmd,
                               check=False,
                               log_file=str(log_file.resolve()))
@@ -267,11 +197,24 @@ def main() -> int:
                         dest='force_delete_outputs',
                         action='store_true',
                         help="Force delete outputs")
-    parser.add_argument('--ivf-tests',
+    parser.add_argument('-p',
+                        '--pattern-tests',
+                        dest='run_pattern_tests',
+                        action='store_true',
+                        default=False,
+                        help="Run pattern input tests")
+    parser.add_argument('-ivf',
+                        '--ivf-tests',
                         dest='run_ivf_tests',
                         action='store_true',
                         default=False,
                         help="Run ivf input tests")
+    parser.add_argument('-a',
+                        '--all-tests',
+                        dest='run_all_tests',
+                        action='store_true',
+                        default=False,
+                        help="Run all tests")
     args = parser.parse_args()
 
     root = pathlib.Path().resolve()
@@ -281,24 +224,19 @@ def main() -> int:
 
     # Set webrtc prefix to env
     webrtc_prefix = root.joinpath('src/out/Default')
+    pm_shell.set_env('PATH', webrtc_prefix)
 
-    my_env = os.environ
-    if not 'PATH' in my_env:
-        my_env['PATH'] = ''
-    my_env['PATH'] = f"{str(webrtc_prefix)}:{my_env['PATH']}"
+    # run
+    include_pattern_tests = args.run_pattern_tests or args.run_all_tests
+    include_ivf_tests = args.run_ivf_tests or args.run_all_tests
+    test_suite = make_test_suite(include_pattern_tests=include_pattern_tests,
+                                 include_ivf_tests=include_ivf_tests)
 
-    if args.run_ivf_tests:
-        ivf_test_suit = make_ivf_test_suit()
-        run_ivf_input_tests(ivf_test_suit,
-                            force=args.force_delete_outputs,
-                            frames=300,
-                            key_frame_interval=100)
-    else:
-        pattern_test_suit = make_default_pattern_test_suit()
-        run_pattern_tests(pattern_test_suit,
-                          force=args.force_delete_outputs,
-                          frames=300,
-                          key_frame_interval=100)
+    if len(test_suite):
+        run_tests(test_suite,
+                  force=args.force_delete_outputs,
+                  frames=300,
+                  key_frame_interval=100)
 
     return 0
 

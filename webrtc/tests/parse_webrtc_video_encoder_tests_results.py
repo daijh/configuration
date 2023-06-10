@@ -29,6 +29,9 @@ def parse_results(input_dir) -> int:
 
     files = input_dir.glob('**/*.ivf')
     for file in files:
+        if not file.is_file():
+            continue
+
         result = {}
 
         trace_header_file = file.parent.joinpath(f'{file.name}.trace_header')
@@ -39,7 +42,7 @@ def parse_results(input_dir) -> int:
             r".*-(?P<codec>.*)-(?P<scalability_mode>L.*)-(?P<layer>L.*)\.ivf",
             file.name)
         if not m:
-            raise RuntimeError(f'invalid ivf file {file.name}')
+            raise RuntimeError(f'invalid {file.name}')
 
         result['ivf_file'] = file.name
         result['codec'] = m.group('codec')
@@ -47,9 +50,9 @@ def parse_results(input_dir) -> int:
         result['layer'] = m.group('layer')
 
         test_suite = f'{file.parent.parent.parent.name}'
-        m = re.match(r"video_encoder_tests-(?P<test_suite>.*)", test_suite)
+        m = re.match(r"video_encoder_tests(?P<test_suite>.*)", test_suite)
         if not m:
-            raise RuntimeError(f'invalid ivf file {file.name}')
+            raise RuntimeError(f'invalid {test_suite}')
 
         result['test_suite'] = m.group('test_suite')
         result['test_case'] = file.parent.parent.name
