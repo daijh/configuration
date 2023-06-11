@@ -163,6 +163,7 @@ def main() -> int:
 
     # set home dir
     home_dir = pathlib.Path('~').expanduser()
+    this_dir = pathlib.Path(__file__).resolve().parent
 
     # install deps
     if args.install_deps or args.install_all:
