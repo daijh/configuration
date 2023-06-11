@@ -75,18 +75,18 @@ def install_deps_others():
         raise RuntimeError(f'Unsupported OS {os_release}')
 
 
-def install_vim_configure(dst):
+def install_vim_configure(home_dir):
     config = pathlib.Path().resolve().joinpath('configs/vimrc')
     if not config.exists():
         raise RuntimeError(f'File does not exist, {config}')
 
-    dst_config = dst.joinpath('.vimrc')
+    dst_config = home_dir.joinpath('.vimrc')
     dst_config.unlink(missing_ok=True)
     dst_config.symlink_to(config)
     print(f'{dst_config} -> {config}')
 
     # clone
-    git_dst = dst.joinpath('.vim/bundle/vundle')
+    git_dst = home_dir.joinpath('.vim/bundle/vundle')
     if git_dst.exists():
         os.chdir(str(git_dst))
 
@@ -104,12 +104,12 @@ def install_vim_configure(dst):
     return
 
 
-def install_git_configure(dst):
+def install_git_configure(home_dir):
     config = pathlib.Path().resolve().joinpath('configs/gitconfig')
     if not config.exists():
         raise RuntimeError(f'File does not exist, {config}')
 
-    dst_config = dst.joinpath('.gitconfig')
+    dst_config = home_dir.joinpath('.gitconfig')
     dst_config.unlink(missing_ok=True)
     dst_config.symlink_to(config)
     print(f'{dst_config} -> {config}')
@@ -117,12 +117,12 @@ def install_git_configure(dst):
     return
 
 
-def install_tmux_configure(dst):
+def install_tmux_configure(home_dir):
     config = pathlib.Path().resolve().joinpath('configs/tmux.conf')
     if not config.exists():
         raise RuntimeError(f'File does not exist, {config}')
 
-    dst_config = dst.joinpath('.tmux.conf')
+    dst_config = home_dir.joinpath('.tmux.conf')
     dst_config.unlink(missing_ok=True)
     dst_config.symlink_to(config)
     print(f'{dst_config} -> {config}')
@@ -132,12 +132,6 @@ def install_tmux_configure(dst):
 
 def main() -> int:
     parser = argparse.ArgumentParser(allow_abbrev=False)
-    parser.add_argument('-r',
-                        '--root',
-                        dest='root',
-                        action='store',
-                        default=None,
-                        help="Set root install path")
     parser.add_argument('-a',
                         '--all',
                         dest='install_all',
@@ -167,24 +161,21 @@ def main() -> int:
                         help="Install tmux config")
     args = parser.parse_args()
 
-    # set pwd
-    pwd = pathlib.Path().resolve()
-    if args.root:
-        pwd = pathlib.Path(args.root).resolve()
-    print(f'Set dst, {pwd}')
+    # set home dir
+    home_dir = pathlib.Path('~').expanduser()
 
     # install deps
     if args.install_deps or args.install_all:
         install_deps()
 
     if args.install_git or args.install_all:
-        install_git_configure(pwd)
+        install_git_configure(home_dir)
 
     if args.install_tmux or args.install_all:
-        install_tmux_configure(pwd)
+        install_tmux_configure(home_dir)
 
     if args.install_vim or args.install_all:
-        install_vim_configure(pwd)
+        install_vim_configure(home_dir)
 
     print('Done')
     return 0
