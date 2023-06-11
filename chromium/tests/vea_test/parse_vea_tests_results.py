@@ -56,7 +56,8 @@ def parse_results(input_dir) -> int:
         frame_rate = int(m.group('frame_rate'))
 
         result['frames'] = int(pm_video.video_frames(trace_header_file))
-        result['bitrate'] = 8 * frame_rate * result['size'] / result['frames']
+        result['bitrate_kbps'] = int(8 * frame_rate * result['size'] /
+                                     result['frames'] / 1000)
 
         result[
             'test_suite'] = file.parent.parent.parent.parent.parent.parent.name
@@ -78,7 +79,7 @@ def parse_results(input_dir) -> int:
         # parse test_suite and value
         values_dict = {}
         test_suites = set()
-        test_suites_item_names = ['size', 'frames', 'bitrate']
+        test_suites_item_names = ['size', 'frames', 'bitrate_kbps']
         for r in sorted_results:
             # retrieve test_suite
             test_suites.add(r['test_suite'])
@@ -90,7 +91,7 @@ def parse_results(input_dir) -> int:
             values_dict[key][r['test_suite']] = {
                 'size': r['size'],
                 'frames': r['frames'],
-                'bitrate': r['bitrate']
+                'bitrate_kbps': r['bitrate_kbps']
             }
 
         test_suites = sorted(test_suites)
