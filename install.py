@@ -8,10 +8,28 @@ import subprocess
 import argparse
 import shutil
 
-# local modules
-import pm_shell
-import pm_packages
-from pm_shell import exec_bash as exec_bash
+
+def run_shell(cmd, check=True, env=None, log_file=None, shell=False):
+    print(f'{cmd}\n')
+
+    if log_file:
+        print(f'Write log: {log_file}\n')
+
+        result = subprocess.run(cmd.split(),
+                                check=check,
+                                env=env,
+                                stdout=subprocess.PIPE,
+                                stderr=subprocess.STDOUT,
+                                shell=shell,
+                                text=True)
+        with open(log_file, 'w', encoding="utf-8") as f:
+            f.write(result.stdout)
+    else:
+        result = subprocess.run(cmd.split(), check=check, env=env)
+
+    result.stdout = None
+    print(f'{result}\n')
+    return result
 
 
 def install_deps():
@@ -34,7 +52,7 @@ def install_deps():
         #packages += f'lm-sensors cpuid cpuinfo hwloc '
 
         cmd = f'sudo -E apt install -y ' + packages
-        exec_bash(cmd, check=False)
+        run_shell(cmd, check=False)
     else:
         raise RuntimeError(f'Unsupported OS {os_release}')
 
@@ -52,7 +70,7 @@ def install_deps_others():
         packages += f'fortunes fortunes-zh cowsay lolcat '
 
         cmd = f'sudo -E apt install -y ' + packages
-        exec_bash(cmd)
+        run_shell(cmd)
     else:
         raise RuntimeError(f'Unsupported OS {os_release}')
 
@@ -73,15 +91,15 @@ def install_vim_configure(dst):
         os.chdir(str(git_dst))
 
         cmd = f'git fetch'
-        exec_bash(cmd, shell=True)
+        run_shell(cmd, shell=True)
         cmd = f'git rebase'
-        exec_bash(cmd, shell=True)
+        run_shell(cmd, shell=True)
     else:
         cmd = f'git clone git@github.com:gmarik/vundle.git {git_dst}'
-        exec_bash(cmd)
+        run_shell(cmd)
 
     cmd = 'vim +PluginInstall +qall'
-    exec_bash(cmd)
+    run_shell(cmd)
 
     return
 
