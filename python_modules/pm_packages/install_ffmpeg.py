@@ -11,7 +11,7 @@ import shutil
 # local modules
 import pm_shell
 import pm_packages
-from pm_shell import exec_bash as exec_bash
+from pm_shell import run_shell as run_shell
 
 
 def install_deps():
@@ -29,7 +29,7 @@ def install_deps():
         packages += f'libx264-dev libx265-dev '
 
         cmd = f'sudo -E apt install -y ' + packages
-        exec_bash(cmd)
+        run_shell(cmd)
     else:
         raise RuntimeError(f'Unsupported OS {os_release}')
 
@@ -69,11 +69,11 @@ def install_ffmpeg(source_dir, prefix):
 
     if not source_dir.joinpath(download).exists():
         cmd = f'wget {url}'
-        exec_bash(cmd)
+        run_shell(cmd)
 
     if not dst.exists():
         cmd = f'tar -zvxf {download}'
-        exec_bash(cmd)
+        run_shell(cmd)
 
     # build
     build_ffmpeg(dst, prefix)

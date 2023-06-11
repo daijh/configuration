@@ -9,12 +9,12 @@ import argparse
 import shutil
 
 # local modules
-from pm_shell import exec_bash as exec_bash
+from pm_shell import run_shell as run_shell
 
 
 def trace_header(input, output):
     cmd = f'ffmpeg -i {input} -vcodec copy -bsf:v trace_headers -f null - '
-    exec_bash(cmd, log_file=output, check=False)
+    run_shell(cmd, log_file=output, check=False)
 
     return
 

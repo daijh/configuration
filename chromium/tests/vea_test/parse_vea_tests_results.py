@@ -13,7 +13,7 @@ from operator import itemgetter, attrgetter
 # local modules
 import pm_shell
 import pm_video
-from pm_shell import exec_bash as exec_bash
+from pm_shell import run_shell as run_shell
 
 # pwd
 global_pwd = pathlib.Path().resolve()

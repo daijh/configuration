@@ -9,7 +9,7 @@ import argparse
 import shutil
 
 
-def exec_bash(cmd, check=True, env=None, log_file=None):
+def run_shell(cmd, check=True, env=None, log_file=None):
     print(f'{cmd}\n')
 
     if log_file:

@@ -11,7 +11,7 @@ import shutil
 # local modules
 import pm_shell
 import pm_packages
-from pm_shell import exec_bash as exec_bash
+from pm_shell import run_shell as run_shell
 
 
 def install_libva(source_dir, prefix, version):

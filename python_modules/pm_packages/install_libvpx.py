@@ -11,7 +11,7 @@ import shutil
 # local modules
 import pm_shell
 import pm_packages
-from pm_shell import exec_bash as exec_bash
+from pm_shell import run_shell as run_shell
 
 
 def install_deps():
@@ -26,7 +26,7 @@ def install_deps():
         packages += f'build-essential cmake libtool wget tcl '
 
         cmd = f'sudo -E apt install -y ' + packages
-        exec_bash(cmd)
+        run_shell(cmd)
         '''
     else:
         raise RuntimeError(f'Unsupported OS {os_release}')
@@ -70,7 +70,7 @@ def install_libvpx_myrepo(source_dir, prefix):
     origin_version = ''
 
     cmd = f'git remote add -f origin_repo ' + origin_url
-    exec_bash(cmd, check=False)
+    run_shell(cmd, check=False)
 
     os.chdir(cwd)
 

@@ -11,7 +11,7 @@ import shutil
 # local modules
 import pm_shell
 import pm_video
-from pm_shell import exec_bash as exec_bash
+from pm_shell import run_shell as run_shell
 
 
 def make_test_suite(include_pattern_tests=True, include_ivf_tests=True):
@@ -174,7 +174,7 @@ def run_tests(test_suite,
                     else:
                         raise RuntimeError(f'Invalid {test_case}')
 
-                    exec_bash(cmd,
+                    run_shell(cmd,
                               check=False,
                               log_file=str(log_file.resolve()))
 

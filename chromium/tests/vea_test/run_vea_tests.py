@@ -10,7 +10,7 @@ import shutil
 
 # local modules
 import pm_shell
-from pm_shell import exec_bash as exec_bash
+from pm_shell import run_shell as run_shell
 
 # pwd
 global_pwd = pathlib.Path().resolve()
@@ -127,7 +127,7 @@ def run_vea_tests(vea_test_suite, force=None):
                             f'--vmodule=*/media/gpu/*=4 ' \
                             f'--output_folder={str(output_path)} '
 
-                    exec_bash(cmd,
+                    run_shell(cmd,
                               check=False,
                               log_file=str(log_file.resolve()))
 

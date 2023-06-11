@@ -9,7 +9,7 @@ import argparse
 import shutil
 
 # local modules
-from pm_shell import exec_bash as exec_bash
+from pm_shell import run_shell as run_shell
 
 
 def install_deps(packages=None):
@@ -22,7 +22,7 @@ def install_deps(packages=None):
 
         if packages:
             cmd = f'sudo -E apt install -y ' + packages
-            exec_bash(cmd)
+            run_shell(cmd)
     else:
         raise RuntimeError(f'Unsupported OS {os_release}')
 
@@ -32,16 +32,16 @@ def clone_git_repo(url, git_revision, dst, clean=None):
 
     if dst.is_dir() and clean:
         cmd = f'rm -rf {dst}'
-        exec_bash(cmd)
+        run_shell(cmd)
 
     if not dst.is_dir():
         cmd = f'git clone {url} {dst}'
-        exec_bash(cmd)
+        run_shell(cmd)
 
         os.chdir(str(dst))
 
         cmd = f'git checkout {git_revision}'
-        exec_bash(cmd)
+        run_shell(cmd)
 
     os.chdir(cwd)
     return
@@ -55,13 +55,13 @@ def autogen_build(dst, configure=''):
     os.chdir(str(dst))
 
     cmd = f'./autogen.sh {configure}'
-    exec_bash(cmd)
+    run_shell(cmd)
 
     cmd = f'make -j 8'
-    exec_bash(cmd)
+    run_shell(cmd)
 
     cmd = f'make install'
-    exec_bash(cmd)
+    run_shell(cmd)
 
     os.chdir(cwd)
     return
@@ -75,13 +75,13 @@ def configure_build(dst, configure=''):
     os.chdir(str(dst))
 
     cmd = f'./configure {configure}'
-    exec_bash(cmd)
+    run_shell(cmd)
 
     cmd = f'make -j 8'
-    exec_bash(cmd)
+    run_shell(cmd)
 
     cmd = f'make install'
-    exec_bash(cmd)
+    run_shell(cmd)
 
     os.chdir(cwd)
     return
@@ -102,13 +102,13 @@ def cmake_build(dst, configure='', install_opts=''):
     os.chdir(str(cmake_dir))
 
     cmd = f'cmake {configure} ..'
-    exec_bash(cmd)
+    run_shell(cmd)
 
     cmd = f'make -j 8'
-    exec_bash(cmd)
+    run_shell(cmd)
 
     cmd = f'make {install_opts} install'
-    exec_bash(cmd)
+    run_shell(cmd)
 
     os.chdir(cwd)
     return
