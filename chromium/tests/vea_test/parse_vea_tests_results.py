@@ -154,12 +154,7 @@ def parse_results(input_dir) -> int:
 
 def main() -> int:
     parser = argparse.ArgumentParser(allow_abbrev=False)
-    parser.add_argument('-i',
-                        '--input',
-                        dest='input_dir',
-                        action='store',
-                        default=None,
-                        help="Set test results path")
+    parser.add_argument('input', default=None, help="Specify input")
     parser.add_argument('-f',
                         '--force',
                         dest='force_delete_outputs',
@@ -167,10 +162,11 @@ def main() -> int:
                         help="Force delete outputs")
     args = parser.parse_args()
 
-    if not args.input_dir:
-        raise RuntimeError(f'--input is not set')
+    input_dir = pathlib.Path(args.input).resolve()
+    if not input_dir.exists():
+        raise RuntimeError(f'Dir does not exist: {input_file}')
 
-    parse_results(pathlib.Path(args.input_dir).resolve())
+    parse_results(input_dir)
 
     return 0
 
