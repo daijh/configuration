@@ -20,7 +20,8 @@ def make_test_suite(include_pattern_tests=True, include_ivf_tests=True):
     #codecs = ['vp8', 'vp9', 'h264', 'av1']
     codecs = ['vp8', 'vp9']
     #scalability_modes = ['L1T1', 'L1T3', 'L3T3_KEY']
-    scalability_modes = ['L1T1', 'L1T3']
+    #scalability_modes = ['L1T1', 'L1T3']
+    scalability_modes = ['L3T3_KEY', 'L3T3']
 
     encode_settings = []
     # webrtc - max
