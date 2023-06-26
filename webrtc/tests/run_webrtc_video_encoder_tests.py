@@ -18,10 +18,11 @@ def make_test_suite(include_pattern_tests=True, include_ivf_tests=True):
     test_suite = []
 
     #codecs = ['vp8', 'vp9', 'h264', 'av1']
-    codecs = ['vp8', 'vp9']
+    #codecs = ['vp8', 'vp9']
+    codecs = ['vp9']
     #scalability_modes = ['L1T1', 'L1T3', 'L3T3_KEY']
-    #scalability_modes = ['L1T1', 'L1T3']
-    scalability_modes = ['L3T3_KEY', 'L3T3']
+    scalability_modes = ['L1T1', 'L1T3']
+    #scalability_modes = ['L3T3_KEY', 'L3T3']
 
     encode_settings = []
     # webrtc - max
@@ -117,12 +118,10 @@ def make_test_suite(include_pattern_tests=True, include_ivf_tests=True):
     return test_suite
 
 
-def run_tests(test_suite,
-              force=None,
-              frames=300,
-              key_frame_interval=100,
-              pwd=pathlib.Path().resolve()):
-    output_dir = pwd.joinpath(f'video_encoder_tests')
+def run_tests(test_suite, force, output_dir):
+    key_frame_interval = 100
+    frames = 300
+
     if output_dir.exists():
         if force:
             shutil.rmtree(str(output_dir))
@@ -213,6 +212,12 @@ def main() -> int:
                         action='store_true',
                         default=False,
                         help="Run all tests")
+    parser.add_argument('-o',
+                        '--output',
+                        dest='output',
+                        action='store',
+                        default='webrtc_video_encoder_tests',
+                        help="Specify output")
     args = parser.parse_args()
 
     root = pathlib.Path().resolve()
@@ -230,11 +235,17 @@ def main() -> int:
     test_suite = make_test_suite(include_pattern_tests=include_pattern_tests,
                                  include_ivf_tests=include_ivf_tests)
 
+    # output
+    pwd = pathlib.Path().resolve()
+    if not args.output:
+        output_dir = pwd.joinpath(f'webrtc_video_encoder_tests')
+    else:
+        output_dir = pwd.joinpath(f'webrtc_video_encoder_tests-{args.output}')
+
     if len(test_suite):
         run_tests(test_suite,
                   force=args.force_delete_outputs,
-                  frames=300,
-                  key_frame_interval=100)
+                  output_dir=output_dir)
 
     return 0
 
