@@ -64,57 +64,40 @@ def make_test_suite(include_pattern_tests=True, include_ivf_tests=True):
         'bitrate_kbps': 150
     })
 
+    # pattern case
     if include_pattern_tests:
-        # pattern case
-        pattern_test = {}
-        pattern_test['pattern'] = 0
-        pattern_test['codecs'] = codecs
-        pattern_test['scalability_modes'] = scalability_modes
-        pattern_test['encode_settings'] = encode_settings
+        for pattern in range(2):
+            test = {}
+            test['pattern'] = pattern
+            test['codecs'] = codecs
+            test['scalability_modes'] = scalability_modes
+            test['encode_settings'] = encode_settings
 
-        test_suite.append(pattern_test)
-
-        # pattern case
-        pattern_test = {}
-        pattern_test['pattern'] = 1
-        pattern_test['codecs'] = codecs
-        pattern_test['scalability_modes'] = scalability_modes
-        pattern_test['encode_settings'] = encode_settings
-
-        test_suite.append(pattern_test)
+            test_suite.append(test)
 
     if include_ivf_tests:
         # ivf case
         ivf_dir = pathlib.Path(
             '/home/webrtc/third_party/test_streams/vp9_lossless_static'
         ).resolve()
-        ivf_file = 'youtube_screenshot_static.ivf'
 
-        pattern_test = {}
-        pattern_test['ivf'] = ivf_dir.joinpath(ivf_file)
-        pattern_test['codecs'] = codecs
-        pattern_test['scalability_modes'] = scalability_modes
-        pattern_test['encode_settings'] = encode_settings
+        ivf_files = []
+        ivf_files.append(ivf_dir.joinpath('youtube_screenshot_static.ivf'))
+        ivf_files.append(ivf_dir.joinpath('gipsrestat-320x180_static.vp9.ivf'))
 
-        test_suite.append(pattern_test)
+        for ivf in ivf_files:
+            test = {}
+            test['ivf'] = ivf
+            test['codecs'] = codecs
+            test['scalability_modes'] = scalability_modes
+            test['encode_settings'] = encode_settings
 
-        # ivf case
-        ivf_dir = pathlib.Path(
-            '/home/webrtc/third_party/test_streams/vp9_lossless_static'
-        ).resolve()
-        ivf_file = 'gipsrestat-320x180_static.vp9.ivf'
-
-        pattern_test = {}
-        pattern_test['ivf'] = ivf_dir.joinpath(ivf_file)
-        pattern_test['codecs'] = codecs
-        pattern_test['scalability_modes'] = scalability_modes
-        pattern_test['encode_settings'] = encode_settings
-
-        test_suite.append(pattern_test)
+            test_suite.append(test)
 
     # return all test cases
     for p in test_suite:
         print(p)
+
     return test_suite
 
 
@@ -240,7 +223,7 @@ def main() -> int:
     if not args.output:
         output_dir = pwd.joinpath(f'webrtc_video_encoder_tests')
     else:
-        output_dir = pwd.joinpath(f'webrtc_video_encoder_tests-{args.output}')
+        output_dir = pwd.joinpath(f'tests-{args.output}')
 
     if len(test_suite):
         run_tests(test_suite,
