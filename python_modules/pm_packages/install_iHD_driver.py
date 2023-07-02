@@ -35,7 +35,7 @@ def install_libva_utils(source_dir, prefix, version):
     pm_packages.clone_git_repo(url, version, dst, None)
 
     # --disable-x11
-    configure = '--prefix={prefix} --disable-wayland'
+    configure = f'--prefix={prefix} --disable-wayland'
     pm_packages.autogen_build(dst, configure)
 
     return
@@ -94,10 +94,16 @@ def main() -> int:
     print(f'Set PWD, {pwd}')
 
     source_dir = pwd.joinpath('third_party')
-    prefix = pwd.joinpath('out')
+    out = pwd.joinpath('out').resolve()
+
+    # version
+    libva_version = '2.18.0'
+    gmmlib_version = 'intel-gmmlib-22.3.5'
+    iHD_version = 'master'
+    prefix = out.joinpath(f'iHD-{iHD_version}-libva-{libva_version}').resolve()
 
     # Set pkg_config_path to env
-    pkg_config_path = prefix.joinpath('lib/pkgconfig')
+    pkg_config_path = prefix.joinpath('lib/pkgconfig').resolve()
     pm_shell.set_env('PKG_CONFIG_PATH', pkg_config_path)
 
     # install deps
@@ -105,11 +111,10 @@ def main() -> int:
         install_deps()
 
     # build
-    install_libva(source_dir, prefix, '2.18.0')
-    #install_libva_utils(source_dir, prefix, '2.18.0')
-    install_gmmlib(source_dir, prefix, 'intel-gmmlib-22.3.5')
-    install_iHD_driver(source_dir, prefix, 'master')
-    #install_iHD_driver(source_dir, prefix,'intel-media-23.1.6')
+    install_libva(source_dir, prefix, libva_version)
+    install_libva_utils(source_dir, prefix, libva_version)
+    install_gmmlib(source_dir, prefix, gmmlib_version)
+    install_iHD_driver(source_dir, prefix, iHD_version)
 
 
 if __name__ == '__main__':
