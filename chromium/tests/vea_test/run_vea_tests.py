@@ -107,19 +107,11 @@ def run_vea_tests(vea_test_suite, force=None):
 
                     output_path.mkdir(parents=True, exist_ok=False)
                     os.chdir(str(output_path))
-                    '''
-                            f'--svc_mode=L{scalability_mode["spatials"]}T{scalability_mode["temporals"]} ' \
-                            f'--num_spatial_layers={scalability_mode["spatials"]} ' \
-                            f'--num_temporal_layers={scalability_mode["temporals"]} ' \
-                            f'--gtest_filter=VideoEncoderTest.FlushAtEndOfStream ' \
-                            f'--gtest_filter=VideoEncoderTest.BitrateCheck ' \
-                    '''
 
                     cmd = f'video_encode_accelerator_tests ' \
                             f'{str(input_path)} ' \
                             f'--codec={codec} ' \
-                            f'--num_spatial_layers={scalability_mode["spatials"]} ' \
-                            f'--num_temporal_layers={scalability_mode["temporals"]} ' \
+                            f'--svc_mode=L{scalability_mode["spatials"]}T{scalability_mode["temporals"]} ' \
                             f'--bitrate_mode=cbr ' \
                             f'--bitrate={encode_setting["bitrate_kbps"] * 1000} ' \
                             f'--output_bitstream ' \

@@ -23,7 +23,7 @@ def parse_results(input_dir) -> int:
     if not input_dir.exists():
         raise RuntimeError(f'input dir does not exist, {input_dir}')
 
-    output = f'output.csv'
+    output = f'vea_output.csv'
 
     results = []
 
