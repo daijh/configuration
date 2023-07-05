@@ -77,13 +77,22 @@ def make_test_suite(include_pattern_tests=True, include_ivf_tests=True):
 
     if include_ivf_tests:
         # ivf case
+        ivf_files = []
+
+        '''
         ivf_dir = pathlib.Path(
             '/home/webrtc/third_party/test_streams/vp9_lossless_static'
         ).resolve()
-
-        ivf_files = []
         ivf_files.append(ivf_dir.joinpath('youtube_screenshot_static.ivf'))
         ivf_files.append(ivf_dir.joinpath('gipsrestat-320x180_static.vp9.ivf'))
+        '''
+
+        ivf_dir = pathlib.Path(
+            '/home/webrtc/third_party/test_streams'
+        ).resolve()
+        ivf_files.append(ivf_dir.joinpath('gipsrestat-1280x720_20210211.vp9-remux.ivf'))
+        ivf_files.append(ivf_dir.joinpath('gipsrestat-640x360_20210211.vp9-remux.ivf'))
+        ivf_files.append(ivf_dir.joinpath('gipsrestat-320x180_20210211.vp9-remux.ivf'))
 
         for ivf in ivf_files:
             test = {}
