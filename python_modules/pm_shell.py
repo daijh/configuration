@@ -22,6 +22,7 @@ def run_shell(cmd, check=True, env=None, log_file=None):
                                 stderr=subprocess.STDOUT,
                                 text=True)
         with open(log_file, 'w', encoding="utf-8") as f:
+            f.write(cmd)
             f.write(result.stdout)
     else:
         result = subprocess.run(cmd.split(), check=check, env=env)
