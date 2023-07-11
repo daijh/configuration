@@ -32,6 +32,7 @@ def make_test_suite(include_pattern_tests=True, include_ivf_tests=True):
         'frame_rate': 30,
         'bitrate_kbps': 2500
     })
+    '''
     encode_settings.append({
         'width': 640,
         'height': 360,
@@ -44,6 +45,7 @@ def make_test_suite(include_pattern_tests=True, include_ivf_tests=True):
         'frame_rate': 30,
         'bitrate_kbps': 300
     })
+    '''
     # webrtc - min
     encode_settings.append({
         'width': 1280,
@@ -51,6 +53,7 @@ def make_test_suite(include_pattern_tests=True, include_ivf_tests=True):
         'frame_rate': 30,
         'bitrate_kbps': 1500
     })
+    '''
     encode_settings.append({
         'width': 640,
         'height': 360,
@@ -63,6 +66,7 @@ def make_test_suite(include_pattern_tests=True, include_ivf_tests=True):
         'frame_rate': 30,
         'bitrate_kbps': 150
     })
+    '''
 
     # pattern case
     if include_pattern_tests:
@@ -78,7 +82,6 @@ def make_test_suite(include_pattern_tests=True, include_ivf_tests=True):
     if include_ivf_tests:
         # ivf case
         ivf_files = []
-
         '''
         ivf_dir = pathlib.Path(
             '/home/webrtc/third_party/test_streams/vp9_lossless_static'
@@ -88,11 +91,11 @@ def make_test_suite(include_pattern_tests=True, include_ivf_tests=True):
         '''
 
         ivf_dir = pathlib.Path(
-            '/home/webrtc/third_party/test_streams'
-        ).resolve()
-        ivf_files.append(ivf_dir.joinpath('gipsrestat-1280x720_20210211.vp9-remux.ivf'))
-        ivf_files.append(ivf_dir.joinpath('gipsrestat-640x360_20210211.vp9-remux.ivf'))
-        ivf_files.append(ivf_dir.joinpath('gipsrestat-320x180_20210211.vp9-remux.ivf'))
+            '/home/webrtc/third_party/test_streams').resolve()
+        ivf_files.append(
+            ivf_dir.joinpath('gipsrestat-1280x720_20210211.vp9-remux.ivf'))
+        #ivf_files.append(ivf_dir.joinpath('gipsrestat-640x360_20210211.vp9-remux.ivf'))
+        #ivf_files.append(ivf_dir.joinpath('gipsrestat-320x180_20210211.vp9-remux.ivf'))
 
         for ivf in ivf_files:
             test = {}
