@@ -29,7 +29,8 @@ gn gen ${GN_DIR} \
 --args=" \
 chrome_pgo_phase=0 \
 symbol_level=1 \
-is_official_build=true \
+is_official_build=false \
+is_component_build=true \
 is_debug=false \
 \
 rtc_use_h264=true \
