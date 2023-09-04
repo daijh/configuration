@@ -12,7 +12,9 @@ kernel.org/doc/Documentation/cpu-freq/governors.txt
 https://www.kernel.org/doc/Documentation/cpu-freq/governors.txt
 '''
 
-
+'''
+cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+'''
 def main() -> int:
     parser = argparse.ArgumentParser(allow_abbrev=False)
     parser.add_argument('-m',
