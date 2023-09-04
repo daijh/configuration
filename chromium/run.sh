@@ -64,6 +64,9 @@ else
 --ozone-platform=x11"
 fi
 
+#--use-gl=drm
+#--use-gl=angle --use-angle=gl
+#--use-gl=egl --use-cmd-decoder=passthrought
 EXTRA_OPTIONS="${EXTRA_OPTIONS} \
 --use-gl=angle --use-angle=gl
 "
