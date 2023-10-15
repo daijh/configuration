@@ -41,8 +41,10 @@ def install_angle(source_dir, prefix):
     cmd = f'fetch angle'
     run_shell(cmd)
 
+    '''
     cmd = f'sudo ./build/install-build-deps.sh'
     run_shell(cmd)
+    '''
 
     cmd = f'gn gen out/Debug'
     run_shell(cmd)
@@ -50,12 +52,21 @@ def install_angle(source_dir, prefix):
     cmd = f'autoninja -C out/Debug'
     run_shell(cmd)
 
+    libEGL = dest_dir.joinpath('out/Debug').joinpath('libEGL.so')
+    libEGL_link = dest_dir.joinpath('out/Debug').joinpath('libEGL.so.1')
+    libEGL_link.unlink(missing_ok=True)
+    libEGL_link.symlink_to(libEGL)
+    print(f'{libEGL_link} -> {libEGL}')
+
     return
+
 
 '''
 angle/doc/DevSetup.md at main · google/angle · GitHub
 https://github.com/google/angle/blob/main/doc/DevSetup.md
 '''
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(allow_abbrev=False)
     parser.add_argument('-r',
