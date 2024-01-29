@@ -51,6 +51,7 @@ ${PREFIX}/chrome \
 \
 --vmodule=*/ozone/*=1,*/wayland/*=1,*/vaapi/*=1,*/viz/*=1,*/media/*=1,*/shared_image/*=1 \
 --enable-logging=stderr --v=0 \
+\
 ${EXTRA_OPTIONS} \
 ${URL}"
 
