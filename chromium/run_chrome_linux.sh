@@ -55,7 +55,7 @@ ${EXTRA_OPTIONS} \
 ${URL}"
 
 # Start
-echo ${CMD} >> ${LOG}
+echo -e ${CMD}"\n" > ${LOG}
 vainfo >> ${LOG}
 echo -e "\nStart Chromium...\n" >> ${LOG}
 ${CMD} |& tee -a ${LOG}
