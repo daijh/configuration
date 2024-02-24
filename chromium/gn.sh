@@ -1,7 +1,11 @@
 #!/bin/bash -ex
 
+# chrome-cros
+CROS_BOARD="amd64-generic"
+GN_DIR_CROS="out_${CROS_BOARD}/Release"
+
 # chrome-linux
-GN_DIR_LINUX="out/Release"
+GN_DIR_LINUX="out_linux/Release"
 
 # lacros-on_linux
 GN_DIR_LACROS="out_linux_lacros/Release"
@@ -27,6 +31,23 @@ use_system_minigbm=true \
 use_intel_minigbm=false \
 \
 ${EXTRA_ARGS}"
+
+# chrome-cros
+CROS_ARGS="\
+import(\"//build/args/chromeos/${CROS_BOARD}.gni\") \
+symbol_level=0 \
+\
+is_official_build = true \
+dcheck_always_on=false \
+is_debug=false \
+\
+rtc_use_h264 = true \
+ffmpeg_branding=\"Chrome\" \
+proprietary_codecs = true \
+\
+enable_hangout_services_extension=true \
+"
+gn gen ${GN_DIR_CROS} --args="${CROS_ARGS}"
 
 # chrome-linux
 LINUX_ARGS="\
