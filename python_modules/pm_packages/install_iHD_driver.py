@@ -97,9 +97,9 @@ def main() -> int:
     out = pwd.joinpath('out').resolve()
 
     # version
-    libva_version = '2.18.0'
-    gmmlib_version = 'intel-gmmlib-22.3.5'
-    iHD_version = 'master'
+    libva_version = '2.20.0'
+    gmmlib_version = 'intel-gmmlib-22.3.15'
+    iHD_version = 'intel-media-23.4.3'
     prefix = out.joinpath(f'iHD-{iHD_version}-libva-{libva_version}').resolve()
 
     # Set pkg_config_path to env
