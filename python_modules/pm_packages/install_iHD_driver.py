@@ -21,8 +21,8 @@ def install_libva(source_dir, prefix, version):
     dst = source_dir.joinpath(name)
     pm_packages.clone_git_repo(url, version, dst, None)
 
-    configure = f'--prefix={prefix}'
-    pm_packages.autogen_build(dst, configure)
+    configure = f'-Dprefix={prefix} -Dlibdir={prefix}/lib -Dwith_wayland=yes -Dwith_x11=yes'
+    pm_packages.meson_build(dst, configure)
 
     return
 
@@ -34,9 +34,8 @@ def install_libva_utils(source_dir, prefix, version):
     dst = source_dir.joinpath(name)
     pm_packages.clone_git_repo(url, version, dst, None)
 
-    # --disable-x11
-    configure = f'--prefix={prefix} --disable-wayland'
-    pm_packages.autogen_build(dst, configure)
+    configure = f'-Dprefix={prefix} -Dlibdir={prefix}/lib -Dtests=true'
+    pm_packages.meson_build(dst, configure)
 
     return
 

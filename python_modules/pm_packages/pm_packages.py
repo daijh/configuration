@@ -94,7 +94,6 @@ def cmake_build(dst, configure='', install_opts=''):
     cwd = os.getcwd()
 
     cmake_dir = dst.joinpath('cmake_build').resolve()
-
     if (cmake_dir.exists()):
         shutil.rmtree(str(cmake_dir))
 
@@ -112,3 +111,26 @@ def cmake_build(dst, configure='', install_opts=''):
 
     os.chdir(cwd)
     return
+
+def meson_build(dst, configure='', install_opts=''):
+    if not dst.exists():
+        raise RuntimeError(f'{dst} not existed')
+
+    cwd = os.getcwd()
+
+    meson_dir = dst.joinpath('meson_build').resolve()
+    if (meson_dir.exists()):
+        shutil.rmtree(str(meson_dir))
+
+    meson_dir.mkdir(exist_ok=True)
+    os.chdir(str(meson_dir))
+
+    cmd = f'meson .. {configure}'
+    run_shell(cmd)
+
+    cmd = f'ninja install'
+    run_shell(cmd)
+
+    os.chdir(cwd)
+    return
+
