@@ -31,23 +31,30 @@ def install_deps():
         raise RuntimeError(f'Unsupported OS {os_release}')
 
 
-def install_shaderc(source_dir, prefix):
-    name = 'shaderc'
-    url = f'git@github.com:google/{name}.git'
-    version = 'v2024.1'
+def install_clvk(source_dir, prefix):
+    name = 'clvk'
+    url = f'git@github.com:kpet/{name}.git'
+    version = ''
 
     dst = source_dir.joinpath(name)
     pm_packages.clone_git_repo(url, version, dst, clean=None)
 
     os.chdir(str(dst))
-    cmd = f'./utils/git-sync-deps'
+
+    cmd = f'git submodule update --init --recursive'
     run_shell(cmd)
 
-    configure = f'-Bbuild -GNinja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX={prefix}'
+    cmd = f'./external/clspv/utils/fetch_sources.py --deps llvm'
+    run_shell(cmd)
+
+    configure = f'-Bbuild -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX={prefix}'
     cmd = f'cmake {configure}'
     run_shell(cmd)
 
-    cmd = f'ninja -j 8 -C build'
+    cmd = f'make -j8 -C build'
+    run_shell(cmd)
+
+    cmd = f'make install -C build'
     run_shell(cmd)
 
     return
@@ -88,7 +95,7 @@ def main() -> int:
     if args.install_deps:
         install_deps()
 
-    install_shaderc(source_dir, prefix)
+    install_clvk(source_dir, prefix)
 
 if __name__ == '__main__':
     sys.exit(main())

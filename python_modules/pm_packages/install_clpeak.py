@@ -21,33 +21,36 @@ def install_deps():
 
     if os_release and re.search('Ubuntu', os_release):
         print(f'OS Ubuntu')
+        '''
         packages = ''
-        packages += f'vulkan-tools libvulkan-dev vulkan-validationlayers-dev spirv-tools '
-        packages += f'libglm-dev '
 
         cmd = f'sudo -E apt install -y ' + packages
         run_shell(cmd)
+        '''
     else:
         raise RuntimeError(f'Unsupported OS {os_release}')
 
 
-def install_shaderc(source_dir, prefix):
-    name = 'shaderc'
-    url = f'git@github.com:google/{name}.git'
-    version = 'v2024.1'
+def install_clpeak(source_dir, prefix):
+    name = 'clpeak'
+    url = f'git@github.com:krrishnarraj/{name}.git'
+    version = ''
 
     dst = source_dir.joinpath(name)
     pm_packages.clone_git_repo(url, version, dst, clean=None)
 
     os.chdir(str(dst))
-    cmd = f'./utils/git-sync-deps'
+
+    cmd = f'git submodule update --init --recursive --remote'
     run_shell(cmd)
 
-    configure = f'-Bbuild -GNinja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX={prefix}'
+    configure = f'-Bbuild -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX={prefix}'
     cmd = f'cmake {configure}'
     run_shell(cmd)
 
-    cmd = f'ninja -j 8 -C build'
+    cmd = f'make -j8 -C build'
+    run_shell(cmd)
+    cmd = f'make install -C build'
     run_shell(cmd)
 
     return
@@ -88,7 +91,7 @@ def main() -> int:
     if args.install_deps:
         install_deps()
 
-    install_shaderc(source_dir, prefix)
+    install_clpeak(source_dir, prefix)
 
 if __name__ == '__main__':
     sys.exit(main())
