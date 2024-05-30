@@ -21,43 +21,35 @@ def install_deps():
 
     if os_release and re.search('Ubuntu', os_release):
         print(f'OS Ubuntu')
-        packages = ''
-        packages += f'vulkan-tools libvulkan-dev vulkan-validationlayers-dev spirv-tools '
-        packages += f'libglm-dev '
-
-        cmd = f'sudo -E apt install -y ' + packages
+        cmd = f'sudo -E apt build-dep mesa'
         run_shell(cmd)
     else:
         raise RuntimeError(f'Unsupported OS {os_release}')
 
 
-def install_clvk(source_dir, prefix):
-    name = 'clvk'
-    url = f'git@github.com:kpet/{name}.git'
-    version = ''
+def install_mesa(source_dir, prefix):
+    name = 'mesa'
+    url = f'git@gitlab.freedesktop.org:mesa/mesa.git'
+    version = 'origin/24.0'
+    configure = f''
 
     dst = source_dir.joinpath(name)
-    pm_packages.clone_git_repo(url, version, dst, clean=None)
+    pm_packages.clone_git_repo(url, version, dst, None)
 
+    cwd = os.getcwd()
     os.chdir(str(dst))
 
-    cmd = f'git submodule update --init --recursive'
+    builddir = 'builddir'
+    cmd = f'meson {builddir}'
     run_shell(cmd)
 
-    cmd = f'./external/clspv/utils/fetch_sources.py --deps llvm'
+    cmd = f'meson configure {builddir} -Dprefix={prefix} --buildtype debug'
     run_shell(cmd)
 
-    # Specify -DCLVK_PERFETTO_SDK_DIR=perfetto/sdk
-    configure = f'-Bbuild -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX={prefix} -DCLVK_PERFETTO_ENABLE=ON'
-    cmd = f'cmake {configure}'
+    cmd = f'ninja -C {builddir} install -j8'
     run_shell(cmd)
 
-    cmd = f'make -j8 -C build'
-    run_shell(cmd)
-
-    cmd = f'make install -C build'
-    run_shell(cmd)
-
+    os.chdir(cwd)
     return
 
 
@@ -73,7 +65,7 @@ def main() -> int:
                         '--deps',
                         dest='install_deps',
                         action='store_true',
-                        default=False,
+                        default=True,
                         help="Install all deps")
     parser.add_argument('-g',
                         '--git',
@@ -96,7 +88,8 @@ def main() -> int:
     if args.install_deps:
         install_deps()
 
-    install_clvk(source_dir, prefix)
+    install_mesa(source_dir, prefix)
+
 
 if __name__ == '__main__':
     sys.exit(main())
