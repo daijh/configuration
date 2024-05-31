@@ -85,7 +85,7 @@ def main() -> int:
     print(f'Set PWD, {pwd}')
 
     source_dir = pwd.joinpath('third_party')
-    prefix = pwd.joinpath('out')
+    prefix = pwd.joinpath('out/clpeak')
 
     # install deps
     if args.install_deps:
