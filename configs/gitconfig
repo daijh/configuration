@@ -20,5 +20,11 @@
 [user]
 	name = Jianhui Dai
 	email = jianhui.j.dai@intel.com
-[url "ssh://git@github.com/"]
-	insteadOf = https://github.com/
+#[url "git@github.com:"]
+#	insteadOf = https://github.com/
+[url "https://github.com/"]
+	insteadOf = git@github.com:
+[http]
+	cookiefile = /home/webrtc/.gitcookies
+[init]
+	defaultBranch = main
