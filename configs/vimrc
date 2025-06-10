@@ -11,12 +11,6 @@ set nonumber
 set nocompatible " not compatible w/ vi
 set cursorline " highlight current line
 
-" ===foldenable===
-"set nofoldenable
-"set foldenable
-"set foldmethod=syntax
-"set foldmethod=manual
-" ===foldenable end===
 
 " normal file type
 set tabstop=4 softtabstop=4 shiftwidth=4
@@ -47,20 +41,8 @@ call plug#begin('~/.vim/plugged')
 " file explorer
 Plug 'scrooloose/nerdtree'
 
-" windows manager
-Plug 'mfholgado/inibufexpl.vim'
-
 " code tags
 Plug 'majutsushi/tagbar'
-
-" find files (TODO)
-Plug 'kien/ctrlp.vim'
-
-" easy motion (TODO)
-Plug 'Lokaltog/vim-easymotion'
-
-" mark words
-Plug 'floggy/vim-mark'
 
 " status/tabline
 Plug 'vim-airline/vim-airline'
@@ -69,10 +51,7 @@ Plug 'vim-airline/vim-airline'
 Plug 'mileszs/ack.vim'
 
 " as name
-Plug 'bruno/vim-show-trailing-whitespace'
-
-" mark
-Plug 'kshenoy/vim-signature'
+Plug 'bronson/vim-trailing-whitespace'
 
 " Install vim-codefmt and its dependencies
 Plug 'google/vim-maktaba'
@@ -84,41 +63,9 @@ Plug 'google/vim-glaive'
 call plug#end()
 " --- END VIM-PLUG SETUP ---
 
-" vimdiff
-map <silent> <leader>2 :diffget 2<CR> :diffupdate<CR>
-map <silent> <leader>3 :diffget 3<CR> :diffupdate<CR>
-map <silent> <leader>4 :diffget 4<CR> :diffupdate<CR>
-if &diff
-    colorscheme evening
-    syntax off
-endif
-" vimdiff end
 
-" The rest of your config follows here
-
-
-" let NERDChristmasTree=1
-" let NERDTreeAutoCenter=1
-" let NERDTreeBookmarksFile=$VIM.'\Data\NerdBookmarks.txt'
-let NERDTreeMouseMode=2
-let NERDTreeShowBookmarks=1
-let NERDTreeShowFiles=1
 let NERDTreeShowHidden=1
-let NERDTreeShowLineNumbers=1
-let NERDTreeWinPos='left'
-let NERDTreeWinSize=31
-" nnoremap f :NERDTreeToggle
-" nnoremap c :NERDTreeClose
 nmap <leader>f :NERDTreeToggle
-
-
-let g:miniBufExplorerMoreThanOne=1
-" let g:miniBufExplModSelTarget = 1
-" let g:miniBufExplForceSyntaxEnable = 1
-let g:miniBufExplMapWindowNavVim = 1
-let g:miniBufExplMapWindowNavArrows = 1
-let g:miniBufExplMapCTabSwitchBufs = 1
-let g:miniBufExplModSelTarget = 1
 
 
 nmap tl :TagbarToggle
@@ -126,4 +73,8 @@ let g:tagbar_left=1
 let g:tagbar_sort=0
 
 
+let g:airline#extensions#tabline#enabled = 1
+
+
 nnoremap <silent> <F7> :Ack<CR>
+
