@@ -86,19 +86,11 @@ def install_vim_configure(home_dir):
     print(f'{dst_config} -> {config}')
 
     # clone
-    git_dst = home_dir.joinpath('.vim/bundle/vundle')
-    if git_dst.exists():
-        os.chdir(str(git_dst))
+    git_dst = home_dir.joinpath('.vim/autoload/plug.vim')
+    cmd = f'curl -fLo {git_dst} --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+    run_shell(cmd)
 
-        cmd = f'git fetch'
-        run_shell(cmd, shell=True)
-        cmd = f'git rebase'
-        run_shell(cmd, shell=True)
-    else:
-        cmd = f'git clone git@github.com:gmarik/vundle.git {git_dst}'
-        run_shell(cmd)
-
-    cmd = 'vim +PluginInstall +qall'
+    cmd = 'vim +PlugInstall +qall'
     run_shell(cmd)
 
     return

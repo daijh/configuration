@@ -39,20 +39,50 @@ autocmd FileType gitcommit setlocal tw=72 cc=+1 spell
 
 " ===FileType End===
 
-" vundle
-filetype off
+" --- VIM-PLUG SETUP ---
+call plug#begin('~/.vim/plugged')
 
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
+" Your list of plugins
 
-" let Vundle manage Vundle
-" required!
-Bundle 'gmarik/vundle'
+" file explorer
+Plug 'scrooloose/nerdtree'
 
-" The bundles you install will be listed here
+" windows manager
+Plug 'mfholgado/inibufexpl.vim'
 
-filetype plugin indent on
-" vundle end
+" code tags
+Plug 'majutsushi/tagbar'
+
+" find files (TODO)
+Plug 'kien/ctrlp.vim'
+
+" easy motion (TODO)
+Plug 'Lokaltog/vim-easymotion'
+
+" mark words
+Plug 'floggy/vim-mark'
+
+" status/tabline
+Plug 'vim-airline/vim-airline'
+
+" ack
+Plug 'mileszs/ack.vim'
+
+" as name
+Plug 'bruno/vim-show-trailing-whitespace'
+
+" mark
+Plug 'kshenoy/vim-signature'
+
+" Install vim-codefmt and its dependencies
+Plug 'google/vim-maktaba'
+Plug 'google/vim-codefmt'
+" Also add Glaive, which is used to configure codefmt's maktaba flags. See
+" " `:help :Glaive` for usage.
+Plug 'google/vim-glaive'
+
+call plug#end()
+" --- END VIM-PLUG SETUP ---
 
 " vimdiff
 map <silent> <leader>2 :diffget 2<CR> :diffupdate<CR>
@@ -66,8 +96,6 @@ endif
 
 " The rest of your config follows here
 
-" file explorer
-Plugin 'scrooloose/nerdtree'
 
 " let NERDChristmasTree=1
 " let NERDTreeAutoCenter=1
@@ -83,8 +111,6 @@ let NERDTreeWinSize=31
 " nnoremap c :NERDTreeClose
 nmap <leader>f :NERDTreeToggle
 
-" windows manager
-Plugin 'minibufexpl.vim'
 
 let g:miniBufExplorerMoreThanOne=1
 " let g:miniBufExplModSelTarget = 1
@@ -94,54 +120,10 @@ let g:miniBufExplMapWindowNavArrows = 1
 let g:miniBufExplMapCTabSwitchBufs = 1
 let g:miniBufExplModSelTarget = 1
 
-" code tags
-Plugin 'majutsushi/tagbar'
 
 nmap tl :TagbarToggle
 let g:tagbar_left=1
 let g:tagbar_sort=0
 
-" find files (TODO)
-Plugin 'kien/ctrlp.vim'
-
-" easy motion (TODO)
-Plugin 'Lokaltog/vim-easymotion'
-
-" mark words
-Plugin 'Mark'
-
-" status/tabline
-Plugin 'vim-airline/vim-airline'
-
-" grep
-" Plugin 'grep.vim'
-"
-" nnoremap <silent> <F6> :Grep<CR>
-" nnoremap <silent> <F7> :Bgrep<CR>
-
-" ack
-Plugin 'mileszs/ack.vim'
 
 nnoremap <silent> <F7> :Ack<CR>
-
-" as name
-Plugin 'ShowTrailingWhitespace'
-
-" mark
-Plugin 'kshenoy/vim-signature'
-
-" markdown preview (TODO)
-
-" Install vim-codefmt and its dependencies
-Plugin 'google/vim-maktaba'
-Plugin 'google/vim-codefmt'
-" Also add Glaive, which is used to configure codefmt's maktaba flags. See
-" " `:help :Glaive` for usage.
-Plugin 'google/vim-glaive'
-" " ...
-"Plugin 'https://gn.googlesource.com/gn', { 'rtp': 'misc/vim' }
-
-"call vundle#end()
-" " the glaive#Install() should go after the "call vundle#end()"
-"call glaive#Install()
-

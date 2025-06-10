@@ -17,6 +17,9 @@
 	prompt = false
 [credential]
 	helper = cache
+	credentialStore = cache
+	helper = 
+	helper = /usr/local/bin/git-credential-manager
 [user]
 	name = Jianhui Dai
 	email = jianhui.j.dai@intel.com
@@ -24,7 +27,21 @@
 #	insteadOf = https://github.com/
 [url "https://github.com/"]
 	insteadOf = git@github.com:
+[url "https://gitlab.freedesktop.org/"]
+	insteadOf = git@gitlab.freedesktop.org:
 [http]
 	cookiefile = /home/webrtc/.gitcookies
 [init]
 	defaultBranch = main
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[http]
+    proxy = http://proxy-prc.intel.com:913
+[https]
+    proxy = http://proxy-prc.intel.com:913
+
+[credential "https://dev.azure.com"]
+	useHttpPath = true
