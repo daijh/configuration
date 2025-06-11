@@ -59,6 +59,12 @@ Plug 'junegunn/fzf.vim'
 " as name
 Plug 'bronson/vim-trailing-whitespace'
 
+" For visualizing Vim's native marks
+Plug 'kshenoy/vim-signature'
+
+" For a separate, persistent bookmarking system
+"Plug 'MattesGroeger/vim-bookmarks'
+
 " Install vim-codefmt and its dependencies
 Plug 'google/vim-maktaba'
 Plug 'google/vim-codefmt'
