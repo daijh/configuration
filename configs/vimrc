@@ -42,7 +42,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'scrooloose/nerdtree'
 
 " code tags
-Plug 'majutsushi/tagbar'
+Plug 'liuchengxu/vista.vim'
 
 " status/tabline
 Plug 'vim-airline/vim-airline'
@@ -68,13 +68,11 @@ let NERDTreeShowHidden=1
 nmap <leader>f :NERDTreeToggle
 
 
-nmap tl :TagbarToggle
-let g:tagbar_left=1
-let g:tagbar_sort=0
-
-
 let g:airline#extensions#tabline#enabled = 1
 
 
 nnoremap <silent> <F7> :Ack<CR>
+
+nmap tl :Vista!!
+let g:vista_sidebar_position = 'vertical topleft'
 
