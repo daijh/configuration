@@ -38,6 +38,8 @@ call plug#begin('~/.vim/plugged')
 
 " Your list of plugins
 
+Plug 'flazz/vim-colorschemes'
+
 " file explorer
 Plug 'scrooloose/nerdtree'
 
@@ -49,6 +51,10 @@ Plug 'vim-airline/vim-airline'
 
 " ack
 Plug 'mileszs/ack.vim'
+
+" For fzf itself and the Vim integration
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 
 " as name
 Plug 'bronson/vim-trailing-whitespace'
