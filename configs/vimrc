@@ -49,8 +49,6 @@ Plug 'liuchengxu/vista.vim'
 " status/tabline
 Plug 'vim-airline/vim-airline'
 
-" ack
-Plug 'mileszs/ack.vim'
 
 " For fzf itself and the Vim integration
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
@@ -65,6 +63,9 @@ Plug 'kshenoy/vim-signature'
 " For a separate, persistent bookmarking system
 "Plug 'MattesGroeger/vim-bookmarks'
 
+" csv
+Plug 'mechatroner/rainbow_csv'
+
 " Install vim-codefmt and its dependencies
 Plug 'google/vim-maktaba'
 Plug 'google/vim-codefmt'
@@ -77,13 +78,30 @@ call plug#end()
 
 
 let NERDTreeShowHidden=1
-nmap <leader>f :NERDTreeToggle
+nmap <leader>t :NERDTreeToggle
 
 
 let g:airline#extensions#tabline#enabled = 1
+nmap tn :bn<CR>
+nmap tp :bN<CR>
+nmap t1 :b 1<CR>
+nmap t2 :b 2<CR>
+nmap t3 :b 3<CR>
+nmap t4 :b 4<CR>
+nmap t5 :b 5<CR>
 
 
-nnoremap <silent> <F7> :Ack<CR>
+" Use <Leader># to search for the word under the cursor in the CURRENT file.
+nnoremap <Leader>s :grep '\b<c-r><c-w>\b' %<CR>
+" Use <Leader>o to open/close the quickfix window
+nnoremap <Leader>o :copen<CR>
+nnoremap <Leader>c :cclose<CR>
+nmap sn :bcnex<CR>
+nmap sp :bcprevious<CR>
+
+
+nmap ra :RainbowAlign<CR>
+
 
 nmap tl :Vista!!
 let g:vista_sidebar_position = 'vertical topleft'
